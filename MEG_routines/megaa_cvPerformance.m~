@@ -1,8 +1,9 @@
-function Out_1 = MEG_1_OptBin_CvKFold(par,folders,In)
+function out = megaa_cvPerformance(par,folders,In)
+%% -------------------------------------------------------------
 % Script to compute the accuracy of the classifiers at each time bin after
 % oucome presentation. The accuracy is computed with a leave-one-out cross
 % validation procedure.
-% ~~~
+% -------------------------------------------------------------
 % G Castegnetti --- start: 2017 --- last update: 05/2019
 
 % unpack parameters
@@ -11,15 +12,21 @@ num_NullEx  = par.NumNullEx;
 n_trials    = par.NumTrials;
 kfold       = 10;
 fs          = filesep;
+whichThreatProb = par.whichThreatProb;
+whichThreatMagn = par.whichThreatMagn;
 
 % Take subject-specific vector of channels retained
-Channels = In.Chan_sub; clear In
+channels = In.Chan_sub; clear In
 
-Out_1 = cell(length(par.subs),1); % allocate memory for output
+% Allocate memory for output
+out = cell(length(par.subs),1);
 
+%% Loop over subjects
+% -------------------------------------------------------------
 for s = 1:length(par.subs)
     
     %% adjust behavioural matrix
+    % -------------------------------------------------------------
     bfile = [folders.beha,'AAA_05_MEG_Sno_',num2str(par.subs(s)),'.mat'];
     load(bfile,'game')
     foo = {game(:).record};
@@ -27,29 +34,52 @@ for s = 1:length(par.subs)
         foo = {game(37:end).record};
         game = game(37:end);
     end
-    BehMat = cell2mat(foo'); % 1:#Tok 2:TokCollSoFar 3:TokDuration 4:PreTokTime 5:TokPos 6:FirstMovPos 7:FirstMovTime 8:MoveBack 9:Caught? 10:Collect?
-    Out_1{s}.BehMat = BehMat; % store behavioural output
+    behMat = cell2mat(foo'); % 1:#Tok 2:TokCollSoFar 3:TokDuration 4:PreTokTime 5:TokPos 6:FirstMovPos 7:FirstMovTime 8:MoveBack 9:Caught? 10:Collect?
+    out{s}.BehMat = behMat; % store behavioural output
     clear bfile foo
     
-    %% extract ITIs
-    ITI = NaN(n_trials,1);
+    
+    %% Extract ITIs and threat probability/magnitude
+    % -------------------------------------------------------------
+    iti = nan(n_trials,1);
+    threatProb = nan(n_trials,1);
+    threatMagn = nan(n_trials,1);
     for trl = 1:n_trials
-        ITI(trl) = game(trl).laststate.waitbreak;
+        iti(trl) = game(trl).laststate.waitbreak;
+        threatProb(trl) = game(trl).laststate.predno;
+        threatMagn(trl) = game(trl).laststate.tokenloss;        
     end, clear trl
     
-    %% Find trials that were either Col or Cau.
-    trials_Col = zeros(length(BehMat),1);
-    trials_Cau = zeros(length(BehMat),1);
+    
+    %% Find which trials were either Col or Cau
+    % -------------------------------------------------------------
+    % If training restricted to one threat level or potential loss, select
+    % relevant trials now.
+    
+    % If we want to consider all threat probabilities and/or magnitudes 
+    % (i.e. par = 100), set a condition that is always true.
+    if whichThreatProb == 100
+        threatProb = 100*ones(length(behMat),1);
+    end
+    if whichThreatMagn == 100
+        threatMagn = 100*ones(length(behMat),1);
+    end
+    
+    % Find trials that meet all conditions.
+    trials_Col = zeros(length(behMat),1);
+    trials_Cau = zeros(length(behMat),1);
     for j = 1:length(trials_Col)
-        trials_Col(j) = ~isempty(find(game(j).posmat(:,7),1)) && game(j).tokenrecord == 1;
-        trials_Cau(j) = ~isempty(find(game(j).posmat(:,3) + game(j).posmat(:,4) == 3 ,1));
+        trials_Col(j) = ~isempty(find(game(j).posmat(:,7),1)) && game(j).tokenrecord == 1 && threatProb(j) == whichThreatProb && threatMagn(j) == whichThreatMagn;
+        trials_Cau(j) = ~isempty(find(game(j).posmat(:,3) + game(j).posmat(:,4) == 3 ,1)) && threatProb(j) == whichThreatProb && threatMagn(j) == whichThreatMagn;
     end
     clear game j
     
-    %% fill matrices with Col and Cau trials
-    d_Col = NaN(size(Channels,1),n_bins,n_trials/(par.NumRuns-1));
-    d_Cau = NaN(size(Channels,1),n_bins,n_trials/(par.NumRuns-1));
-    d_Nul = NaN(size(Channels,1),n_bins,n_trials/(par.NumRuns-1));
+    
+    %% Create matrices containing the field at the sensors
+    % -------------------------------------------------------------
+    d_Col = NaN(size(channels,1),n_bins,n_trials/(par.NumRuns-1));
+    d_Cau = NaN(size(channels,1),n_bins,n_trials/(par.NumRuns-1));
+    d_Nul = NaN(size(channels,1),n_bins,n_trials/(par.NumRuns-1));
     for r = 2:par.NumRuns
         
         % Set correct file name given a folder
@@ -65,44 +95,38 @@ for s = 1:length(par.subs)
         % extract runs and merge them in the same matrix
         load([file_Col,'.mat'])
         D.path = [folders.scan,'MEG_sub_',num2str(par.subs(s))];
-        d_Col(:,:,(108*(r-2)+1):(108*(r-1))) = D.data(Channels(:,s),1:n_bins,:); clear D
+        d_Col(:,:,(108*(r-2)+1):(108*(r-1))) = D.data(channels(:,s),1:n_bins,:); clear D
         
         load([file_Cau,'.mat'])
         D.path = [file_Cau,'.dat'];
-        d_Cau(:,:,(108*(r-2)+1):(108*(r-1))) = D.data(Channels(:,s),1:n_bins,:); clear D
+        d_Cau(:,:,(108*(r-2)+1):(108*(r-1))) = D.data(channels(:,s),1:n_bins,:); clear D
         
         load([file_Nul,'.mat'])
         D.path = [file_Nul,'.dat'];
-        d_Nul(:,:,(108*(r-2)+1):(108*(r-1))) = D.data(Channels(:,s),1:n_bins,:); clear D
+        d_Nul(:,:,(108*(r-2)+1):(108*(r-1))) = D.data(channels(:,s),1:n_bins,:); clear D
     end
     clear file_Col file_Cau file_Bas r
     
-    %% fill a matrix containing the cut epochs corresponding to the trial type, including null examples
-    TrialTypes = -1*trials_Col + trials_Cau; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mod 28/08
-    %     TrialTypes = 1*trials_Cau;
-    d_Real = NaN(size(Channels,1),n_bins,n_trials);
-    for i = 1:n_trials
-        if TrialTypes(i) == -1
-            d_Real(:,:,i) = d_Col(:,:,i);
-        elseif TrialTypes(i) == 1
-            d_Real(:,:,i) = d_Cau(:,:,i);
-        end
-    end
-    %     clear TrialTypes i d_Col d_Cau
+    %% Prepare training data (i.e. field at the sensors) for the classifier
+    % -------------------------------------------------------------
+    d_Real = nan(size(channels,1),n_bins,n_trials);
+    d_Real(:,:,logical(trials_Col)) = d_Col(:,:,logical(trials_Col));
+    d_Real(:,:,logical(trials_Cau)) = d_Cau(:,:,logical(trials_Cau));
     
-    %% create (design) matrix with trial numbers and types
+    
+    %% Create design matrix with trial numbers and types
+    % -------------------------------------------------------------
     idx_Col = find(trials_Col);
     idx_Cau = find(trials_Cau);
-    numTrialsCol(s) = numel(idx_Col);
-    numTrialsCau(s) = numel(idx_Cau);
     idx_All = [[idx_Col;idx_Cau] [zeros(length(idx_Col),1);ones(length(idx_Cau),1)]];
     [foo idx] = sort(idx_All);
-    Design = [foo(:,1),foo(idx(:,1),2)]; % this is the matrix used to build the inputs for lassglm
+    design = [foo(:,1),foo(idx(:,1),2)]; % this is the matrix used to build the inputs for lassglm
     clear idx_Col idx_Cau idx_All foo idx trials_Col trials_Cau
     
-    %% create baseline matrix
+    %% Create matrix with null examples
+    % -------------------------------------------------------------
     idx = (2:n_trials)';
-    TrlRem = idx(ITI(1:end-1) > 2000);
+    TrlRem = idx(iti(1:end-1) > 2000);
     TrlRem = TrlRem(randperm(length(TrlRem)));
     TrlRem = TrlRem(1:num_NullEx);
     OnsRem = round(1 + 99*rand(num_NullEx,1));
@@ -111,15 +135,15 @@ for s = 1:length(par.subs)
         foo_Base(b,:) = squeeze(d_Nul(:,OnsRem(b),TrlRem(b))); % sensor data at the baseline
     end
     d_Nul = foo_Base;
-    Out_1{s}.d_Base = d_Nul; % save d_Base
+    out{s}.d_Base = d_Nul; % save d_Base
     clear idx trl_rem
     
-    %% regression
+    %% Train classifi
     
     % vectors of labels
-    Y_Cau = [Design(:,2); zeros(num_NullEx,1)]; % outcomes if Cau are positive examples
-    Y_Col = [1-Design(:,2); zeros(num_NullEx,1)]; % outcomes if Col are positive examples
-    Y_Bas = [0*Design(:,2); ones(num_NullEx,1)]; % outcomes if Bas are positive examples
+    Y_Cau = [design(:,2); zeros(num_NullEx,1)]; % outcomes if Cau are positive examples
+    Y_Col = [1-design(:,2); zeros(num_NullEx,1)]; % outcomes if Col are positive examples
+    Y_Bas = [0*design(:,2); ones(num_NullEx,1)]; % outcomes if Bas are positive examples
     
     % initialise stuff
     Cau.Coeff = {};
@@ -134,7 +158,7 @@ for s = 1:length(par.subs)
     
     % loop over time points after outcome onset
     for t = 1:n_bins
-        X_Real = squeeze(d_Real(:,t,Design(:,1)))'; % sensor data at the outcome
+        X_Real = squeeze(d_Real(:,t,design(:,1)))'; % sensor data at the outcome
         X_Base = d_Nul;                            % sensor data at the baseline
         X = [X_Real; X_Base];
         SizSets = ceil(size(X,1)/kfold);
@@ -176,14 +200,14 @@ for s = 1:length(par.subs)
     end
     clear t t_Null RandOnsets_Null X_Real X_Base X Y_Cau Y_Col Cau Col
     
-    Out_1{s}.Pred_Cau = Pred_Cau;
-    Out_1{s}.Pred_Col = Pred_Col;
-    Out_1{s}.Pred_Bas = Pred_Bas;
-    Out_1{s}.Chan = Channels(:,s);
-    Out_1{s}.Design = Design;
-    Out_1{s}.BasTrl = TrlRem;
-    Out_1{s}.BasOns = OnsRem;
-    Out_1{s}.d_Real = d_Real;
+    out{s}.Pred_Cau = Pred_Cau;
+    out{s}.Pred_Col = Pred_Col;
+    out{s}.Pred_Bas = Pred_Bas;
+    out{s}.Chan = channels(:,s);
+    out{s}.Design = design;
+    out{s}.BasTrl = TrlRem;
+    out{s}.BasOns = OnsRem;
+    out{s}.d_Real = d_Real;
     
     clear d_Real d_Base Design
     

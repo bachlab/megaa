@@ -1,4 +1,4 @@
-function BalAcc = MEG_1_PerBin(set_par,In)
+function balAcc = megaa_balancedAccuracy(set_par,In)
 
 n_bins = set_par.NumTrainBins;
 subs = set_par.subs;
@@ -25,7 +25,7 @@ for s = 1:length(subs)
         Acc_Pos_Cau = TP_Cau/(TP_Cau + FN_Cau);
         Acc_Neg_Cau = TN_Cau/(TN_Cau + FP_Cau);
 
-        BalAcc.Cau(s,t) = mean([Acc_Pos_Cau Acc_Neg_Cau]);
+        balAcc.Cau(s,t) = mean([Acc_Pos_Cau Acc_Neg_Cau]);
         
         %% Col
         % find true positives
@@ -47,7 +47,7 @@ for s = 1:length(subs)
         Acc_Pos_Col = TP_Col/(TP_Col + FN_Col);
         Acc_Neg_Col = TN_Col/(TN_Col + FP_Col);
 
-        BalAcc.Col(s,t) = mean([Acc_Pos_Col Acc_Neg_Col]);
+        balAcc.Col(s,t) = mean([Acc_Pos_Col Acc_Neg_Col]);
         
         %% Bas
         % find true positives
@@ -69,12 +69,12 @@ for s = 1:length(subs)
         Acc_Pos_Bas = TP_Bas/(TP_Bas + FN_Bas);
         Acc_Neg_Bas = TN_Bas/(TN_Bas + FP_Bas);
 
-        BalAcc.Bas(s,t) = mean([Acc_Pos_Bas Acc_Neg_Bas]);
+        balAcc.Bas(s,t) = mean([Acc_Pos_Bas Acc_Neg_Bas]);
         
     end
     
-    BalAcc.Cau(s,:) = smooth(BalAcc.Cau(s,:));
-    BalAcc.Col(s,:) = smooth(BalAcc.Col(s,:));
-    BalAcc.Bas(s,:) = smooth(BalAcc.Bas(s,:));
+    balAcc.Cau(s,:) = smooth(balAcc.Cau(s,:));
+    balAcc.Col(s,:) = smooth(balAcc.Col(s,:));
+    balAcc.Bas(s,:) = smooth(balAcc.Bas(s,:));
     
 end

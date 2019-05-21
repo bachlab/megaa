@@ -28,6 +28,8 @@ param.NumTrials = 540;  % Number of trials per subject
 param.NumPerm = 100;    % Number of permutations for statistical testing
 param.NumTrainBins = 100; % Number of (10ms) time bins to consider after outcome presentation to define training set
 param.NullOnset = 50;   % Where to take data for null examples
+param.whichThreatProb = 100;
+param.whichThreatMagn = 100;
 
 % Select whether to align to token appearance (1) or trial start (2)
 param.align = 2;
@@ -42,9 +44,9 @@ steps.preprocess = 0;
 steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
-steps.findBin = 0;
+steps.findBin = 1;
 steps.findLasso = 0;
-steps.createClass = 1;
+steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
 steps.bf = 0;
@@ -112,7 +114,7 @@ end
 file_1 = fullfile(outFolder,'Out_S1_OptBin');
 if steps.findBin
     if ~exist('Out_0','var'), load(file_0,'Out_0'), end
-    Out_1 = MEG_1_OptBin_CvKFold(param,folders,Out_0);
+    Out_1 = megaa_cvPerformance(param,folders,Out_0);
     save(file_1,'Out_1','-v7.3')
 end, clear Out_0
 
