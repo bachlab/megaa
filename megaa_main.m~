@@ -44,7 +44,7 @@ steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 0;
 steps.findLasso = 0;
-steps.createClass = 1;
+steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
 steps.bf = 0;
@@ -133,13 +133,8 @@ file_3 = fullfile(outFolder,'Out_S3_CreCla');
 if steps.createClass
     if ~exist('Out_1','var'), load(file_1,'Out_1'), end
     if ~exist('Out_2','var'), load(file_2,'Out_2'), end
-    
-    % Decide which script to use based on whether we include null examples
-    if param.NumNullEx == 0
-        Out_3 = MEG_3_CreCla(param,Out_1,Out_2);
-    else
-        Out_3 = MEG_3_CreClaVsBase(set_par,Out_1,Out_2);
-    end
+    Out_3 = MEG_3_CreCla(param,Out_1,Out_2);
+    %     Out_3 = MEG_3_CreClaVsBase(set_par,Out_1,Out_2);
     save(file_3,'Out_3','-v7.3')
 end, clear Out_2
 
@@ -187,11 +182,11 @@ for i = 1:round(param.deliberTime/10)
     
     outProb = log(lme_Real.Col(:,i)./(1-lme_Real.Col(:,i)));
     outProb(outProb == Inf) = 100;
-    %     outProb = R_Real.Col(:,i);
-    
+%     outProb = R_Real.Col(:,i);
+        
     % Create table suitable for lme
-    %     ~isnan(lmeTab(:,7))
-    lmeTab = array2table([outProb(~isnan(lmeCond(:,6))), lmeCond(~isnan(lmeCond(:,6)),:)]);
+%     ~isnan(lmeTab(:,7))
+    lmeTab = array2table([outProb(~isnan(lmeCond(:,6))), lmeCond(~isnan(lmeCond(:,6)),:)]); 
     lmeTab.Properties.VariableNames = {'outProb','sub','run','trial','lossProb','lossMagn','approach','prevOut','rt'};
     
     % Save matrix suitable for lme
@@ -213,6 +208,7 @@ figure('color',[1 1 1])
 %% Behaviour <------- make this code nicer
 % -------------------------------------------------------------
 MEG_Behaviour(param,folders);
+
 
 
 %% Autocorrelation

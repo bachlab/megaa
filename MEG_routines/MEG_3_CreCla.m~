@@ -1,5 +1,6 @@
 function Out = MEG_3_CreCla(set_par,In_1,In_2)
-% Given optimal bin and lasso, creates classifier
+%% Given optimal bin and lambda, creates classifier
+% -------------------------------------------------------------
 % G Castegnetti 2017
 
 %% unpack parameters
