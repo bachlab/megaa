@@ -28,7 +28,7 @@ for s = 1:length(subs)
     plot(x,balancedAcc.Col(s,:),'linewidth',1.5,'color','b')
     ylim([0.45 0.85])
 end
-    
+
 %% compute average performance
 Met_Cau_avg = nanmean(balancedAcc.Cau);
 Met_Col_avg = nanmean(balancedAcc.Col);
@@ -54,7 +54,7 @@ xlabel('Time (ms)'), ylabel('Balanced accuracy')
 ylim([0.48 0.70])
 xlim([0 500])
 clear x dev_Cau_avg dev_Col_avg OptBin_shift TimeOut_thh_idx dev_Sum_avg
-
+keyboard
 %% optimise lasso
 % lasso = [0.001:0.001:0.009 0.01:0.005:0.1]; % lasso coefficients to try %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mod. 30/08
 lasso = [0.0005:0.0005:0.01]; % lasso coefficients to try %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mod. 30/08

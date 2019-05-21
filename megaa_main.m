@@ -20,15 +20,16 @@ addpath(genpath([pwd,fs,'MEG_routines']))
 param.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
 param.ebCorr = 0;       % Correct eyeblink artefacts?
 param.NumNullEx = 0;    % Number of null examples taken before trial onset.
-param.timeBin = 39;
-outOne = ['_Col_',num2str(param.timeBin*10),'ms'];        % Which outcome to consider?
+param.timeBin = 30;
+outOne = ['_Col_',num2str(param.timeBin*10),'ms_threatProb3'];        % Which outcome to consider?
 param.subs = [1:5 7:9 11:25]; % Subjects
+% param.subs = [14:25]; % Subjects
 param.NumRuns = 6;      % Number of experimental runs
 param.NumTrials = 540;  % Number of trials per subject
 param.NumPerm = 100;    % Number of permutations for statistical testing
 param.NumTrainBins = 100; % Number of (10ms) time bins to consider after outcome presentation to define training set
 param.NullOnset = 50;   % Where to take data for null examples
-param.whichThreatProb = 100;
+param.whichThreatProb = 3;
 param.whichThreatMagn = 100;
 
 % Select whether to align to token appearance (1) or trial start (2)
@@ -45,7 +46,7 @@ steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 1;
-steps.findLasso = 0;
+steps.findLasso = 1;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;

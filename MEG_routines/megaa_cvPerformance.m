@@ -164,24 +164,25 @@ for s = 1:length(par.subs)
         x = [x_Real; x_Base];
         sizSets = ceil(size(x,1)/kfold);
         setLabels = randperm(size(x,1));
+        
+        foo = cvpartition(y_Col,'kfold',10);
+        
+        
         for o = 1:kfold
             
-            if o < kfold
-                testTrl = setLabels(1+(o-1)*sizSets:o*sizSets)';
-            else
-                testTrl = setLabels(1+(o-1)*sizSets:end)';
-            end
+            trainingSet = training(foo,o);
+            testSet = ~trainingSet;
             
             % update user
-            disp(['Sub#',int2str(par.subs(s)),' of ',int2str(par.subs(end)),'; bin#',int2str(t) ' of ' int2str(n_bins),'; fold#',int2str(o),'; size = ',int2str(length(testTrl)),'...']);
+            disp(['Sub#',int2str(par.subs(s)),' of ',int2str(par.subs(end)),'; bin#',int2str(t) ' of ' int2str(n_bins),'; fold#',int2str(o),'; size = ',int2str(length(testSet)),'...']);
             
-            x_test = x(testTrl,:)';     % test set
+            x_test = x(testSet,:)';     % test set
             x_train = x;                % training set
-            x_train(testTrl,:) = [];    % remove test trials from training set
+            x_train(testSet,:) = [];    % remove test trials from training set
             
-            y_Cau_red = y_Cau; y_Cau_red(testTrl) = []; % Cau outcomes
-            y_Col_red = y_Col; y_Col_red(testTrl) = []; % Col outcomes
-            y_Bas_red = y_Bas; y_Bas_red(testTrl) = []; % Bas outcomes
+            y_Cau_red = y_Cau; y_Cau_red(testSet) = []; % Cau outcomes
+            y_Col_red = y_Col; y_Col_red(testSet) = []; % Col outcomes
+            y_Bas_red = y_Bas; y_Bas_red(testSet) = []; % Bas outcomes
             
             [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Cau positive examples
             [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Col positive examples
@@ -189,15 +190,15 @@ for s = 1:length(par.subs)
             
             % Cau predictions
             foo_Cau = sum(repmat(foo_Coeff_Cau,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Cau.Intercept;
-            pred_Cau(testTrl,t) = round(1./(1+exp(-foo_Cau)));
+            pred_Cau(testSet,t) = round(1./(1+exp(-foo_Cau)));
             
             % Col predictions
             foo_Col = sum(repmat(foo_Coeff_Col,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Col.Intercept;
-            pred_Col(testTrl,t) = round(1./(1+exp(-foo_Col)));
+            pred_Col(testSet,t) = round(1./(1+exp(-foo_Col)));
             
             % Bas predictions
             foo_Bas = sum(repmat(foo_Coeff_Bas,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Bas.Intercept;
-            pred_Bas(testTrl,t) = round(1./(1+exp(-foo_Bas)));
+            pred_Bas(testSet,t) = round(1./(1+exp(-foo_Bas)));
         end
     end
     clear t t_Null RandOnsets_Null X_Real X_Base X Y_Cau Y_Col Cau Col
