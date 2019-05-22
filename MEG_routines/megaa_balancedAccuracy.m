@@ -1,9 +1,8 @@
 function balAcc = megaa_balancedAccuracy(set_par,In)
 
 n_bins = set_par.NumTrainBins;
-subs = set_par.subs;
 figure('color',[1 1 1])
-for s = 1:length(subs)
+for s = 1:length(set_par.subs)
     for t = 1:n_bins
         %% Cau
         % find true positives
