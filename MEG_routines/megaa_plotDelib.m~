@@ -1,0 +1,66 @@
+function megaa_plotDelib(par,data,conds)
+%% Plots average reconstructed probabilities
+% ----------------------------------------------------
+% G Castegnetti --- start: 05/2019
+
+MinDuration = par.deliberTime;
+PredCont = In;
+
+subs = par.subs; clear set
+SS_avg = cell(length(subs),1);
+
+%% plot grand averages
+Avg_Cau_GoSort = 0;
+Avg_Cau_Stay = 0;
+Avg_Cau_TL = 0;
+Avg_Cau_PL = 0;
+Avg_Col_All = 0;
+Avg_Col_GoSort = 0;
+Avg_Col_Stay = 0;
+Avg_Col_TL = 0;
+Avg_Col_PL = 0;
+
+for s = 1:length(subs)
+    Avg_Cau_GoSort = Avg_Cau_GoSort + SS_avg{s}.Cau.GoSort/length(subs);
+    Avg_Cau_Stay = Avg_Cau_Stay + SS_avg{s}.Cau.Stay/length(subs);
+    Avg_Cau_TL = Avg_Cau_TL + SS_avg{s}.Cau.TL/length(subs);
+    Avg_Cau_PL = Avg_Cau_PL + SS_avg{s}.Cau.PL/length(subs);
+    
+    Avg_Col_All = Avg_Col_All + SS_avg{s}.Col.All/length(subs);
+    Avg_Col_GoSort = Avg_Col_GoSort + SS_avg{s}.Col.GoSort/length(subs);
+    Avg_Col_Stay = Avg_Col_Stay + SS_avg{s}.Col.Stay/length(subs);
+    Avg_Col_TL = Avg_Col_TL + SS_avg{s}.Col.TL/length(subs);
+    Avg_Col_PL = Avg_Col_PL + SS_avg{s}.Col.PL/length(subs);
+end
+if figs(2) == 1
+    drawnow
+    figure('color',[1 1 1])
+    subplot(3,2,5),plot(tspan,[smooth(smooth(Avg_Cau_GoSort')), smooth(smooth(Avg_Cau_Stay'))],'linewidth',2)
+    title('Neg+, Approach/avoidance'),set(gca,'fontsize',14), xlim([0 MinDuration]),ylim([0.30 0.41])
+    set(gca,'xtick',0:200:1500)
+    
+    for i = 1:3, Avg_Cau_TL_s(:,i) =  smooth(smooth(Avg_Cau_TL(:,i))); end
+    subplot(3,2,1),plot(tspan,Avg_Cau_TL_s,'linewidth',2)
+    title('Neg+, Threat probability'),set(gca,'fontsize',14), xlim([0 MinDuration]),ylim([0.30 0.41])
+    set(gca,'xtick',0:200:1500)
+    
+    for i = 1:6, Avg_Cau_PL_s(:,i) =  smooth(smooth(Avg_Cau_PL(:,i))); end
+    subplot(3,2,3),plot(tspan,Avg_Cau_PL_s,'linewidth',2)
+    title('Neg+, Threat magnitude'),set(gca,'fontsize',14), xlim([0 MinDuration]),ylim([0.30 0.41])
+    set(gca,'xtick',0:200:1500)
+    
+    subplot(3,2,6),plot(tspan,[smooth(smooth(Avg_Col_GoSort')) smooth(smooth(Avg_Col_Stay'))],'linewidth',2)
+    title('Pos+, Approach/avoidance'),set(gca,'fontsize',11), xlim([0 MinDuration])%,ylim([0.59 0.85])
+    set(gca,'xtick',0:200:1500)
+    
+    for i = 1:3, Avg_Col_TL_s(:,i) =  smooth(smooth(Avg_Col_TL(:,i))); end
+    subplot(3,2,2),plot(tspan,Avg_Col_TL_s,'linewidth',2)
+    title('Pos+, Threat probability'),set(gca,'fontsize',11), xlim([0 MinDuration])%,ylim([0.59 0.85])
+    set(gca,'xtick',0:200:1500)
+    
+    for i = 1:6, Avg_Col_PL_s(:,i) =  smooth(smooth(Avg_Col_PL(:,i))); end
+    subplot(3,2,4),plot(tspan,Avg_Col_PL_s,'linewidth',2)
+    title('Pos+, Threat magnitude'),set(gca,'fontsize',11), xlim([0 MinDuration])%,ylim([0.59 0.85])
+    set(gca,'xtick',0:200:1500)
+
+end

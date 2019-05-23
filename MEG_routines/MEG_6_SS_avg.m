@@ -111,17 +111,17 @@ if figs(2) == 1
     set(gca,'xtick',0:200:1500)
     
     subplot(3,2,6),plot(tspan,[smooth(smooth(Avg_Col_GoSort')) smooth(smooth(Avg_Col_Stay'))],'linewidth',2)
-    title('Pos+, Approach/avoidance'),set(gca,'fontsize',11), xlim([0 MinDuration]),ylim([0.59 0.85])
+    title('Pos+, Approach/avoidance'),set(gca,'fontsize',11), xlim([0 MinDuration])%,ylim([0.59 0.85])
     set(gca,'xtick',0:200:1500)
     
     for i = 1:3, Avg_Col_TL_s(:,i) =  smooth(smooth(Avg_Col_TL(:,i))); end
     subplot(3,2,2),plot(tspan,Avg_Col_TL_s,'linewidth',2)
-    title('Pos+, Threat probability'),set(gca,'fontsize',11), xlim([0 MinDuration]),ylim([0.59 0.85])
+    title('Pos+, Threat probability'),set(gca,'fontsize',11), xlim([0 MinDuration])%,ylim([0.59 0.85])
     set(gca,'xtick',0:200:1500)
     
     for i = 1:6, Avg_Col_PL_s(:,i) =  smooth(smooth(Avg_Col_PL(:,i))); end
     subplot(3,2,4),plot(tspan,Avg_Col_PL_s,'linewidth',2)
-    title('Pos+, Threat magnitude'),set(gca,'fontsize',11), xlim([0 MinDuration]),ylim([0.59 0.85])
+    title('Pos+, Threat magnitude'),set(gca,'fontsize',11), xlim([0 MinDuration])%,ylim([0.59 0.85])
     set(gca,'xtick',0:200:1500)
 
 end

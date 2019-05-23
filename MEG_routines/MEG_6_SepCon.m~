@@ -1,46 +1,44 @@
-function [idx, lmeMat] = MEG_6_SepCon(set_par,folders,In_2)
+function [idx, lmeMat] = MEG_6_SepCon(par,folders,In_2)
 % Separates trials according to threat level (1-3), potential loss (0-5),
 % and upcoming behaviour (Go-Stay)
 % G Castegnetti --- start: 2017 --- last update: 05/2019
 
-%% unpack parameters
+%% Unpack parameters
 % ------------------------------------------------------------
-subs = set_par.subs;
-align = set_par.align;
-n_trials = set_par.NumTrials; 
-MinDuration = set_par.deliberTime; clear set_par
+subs = par.subs;
+align = par.align;
+n_trials = par.NumTrials; 
+MinDuration = par.deliberTime; clear par
 
 
-%% allocate memory
+%% Allocate memory
 % ------------------------------------------------------------
 idx = cell(length(subs),1);
 N_Trials_Stay_All = zeros(3,6);
 lmeMat = NaN(n_trials*length(subs),6);
 
 
-%% loop pver subjects
+%% Loop over subjects
 % ------------------------------------------------------------
 for s = 1:length(subs)
 
     % retrieve BehMat and create vector with movement onsets
-    BehMat = In_2{s}.BehMat; % 1:#Tok 2:TokCollSoFar 3:TokDuration 4:PreTokTime 5:TokPos 6:FirstMovPos 7:FirstMovTime 8:MoveBack 9:Caught? 10:Collect?
-    
-    % compute ratio between number of positive and negative outcomes
-    P_ex(s)     = sum(1-In_2{s}.Design(:,2));
-    N_ex(s)     = sum(In_2{s}.Design(:,2));
-    PN_ratio(s) = sum(1-In_2{s}.Design(:,2))./sum(In_2{s}.Design(:,2)); %#ok<AGROW,NASGU>
+    behMat = In_2{s}.BehMat; % 1:#Tok 2:TokCollSoFar 3:TokDuration 4:PreTokTime 5:TokPos 6:FirstMovPos 7:FirstMovTime 8:MoveBack 9:Caught? 10:Collect?
     
     % find trials with epochs long enough (Go = 1; Stay = -1)
     % --------------------------------------------------------
-    Trls = NaN(1,n_trials);
+    trialsRetain = zeros(n_trials,1);
+    trialsApproach = zeros(n_trials,1);
+    trialsAvoidance = zeros(n_trials,1);
     if align == 1
-        Trls(BehMat(:,7) > MinDuration) = 1;
-        Trls(BehMat(:,7) == 0) = -1;
+        trialsRetain(behMat(:,7) > MinDuration | behMat(:,7) == 0) = 1;
+        trialsApproach(behMat(:,7) > MinDuration) = 
+        trialsAvoidance(behMat(:,7) == 0) = 1;
     elseif align == 2
-        Trls(BehMat(:,4) > MinDuration & BehMat(:,7) > 0) = 1;
-        Trls(BehMat(:,4) > MinDuration & BehMat(:,7) == 0) = -1;
+        trialsRetain(behMat(:,4) > MinDuration & behMat(:,7) > 0) = 1;
+        trialsRetain(behMat(:,4) > MinDuration & behMat(:,7) == 0) = -1;
     end
-    lmeMat(n_trials*(s-1)+1:n_trials*s,8) = BehMat(:,7);
+    lmeMat(n_trials*(s-1)+1:n_trials*s,8) = behMat(:,7);
 
     
     % extract threat levels and potential losses
@@ -80,9 +78,9 @@ for s = 1:length(subs)
     lmeMat(n_trials*(s-1)+1:n_trials*s,4) = TL; % TL
     lmeMat(n_trials*(s-1)+1:n_trials*s,5) = PL; % PL
     
-    idx_Stay_R = find(Trls == -1);
+    idx_Stay_R = find(trialsRetain == -1);
     lmeMat(n_trials*(s-1)+idx_Stay_R,6) = 0;    % Go
-    idx_go = find(Trls == 1);
+    idx_go = find(trialsRetain == 1);
     lmeMat(n_trials*(s-1)+idx_go,6) = 1;      % Stay
     
     
@@ -99,9 +97,9 @@ for s = 1:length(subs)
     
     % Go/NoGo
     if align == 1
-        [~,idx_go_sort] = sort(BehMat(idx_go,7)); % order trials according to movement latency from token appearance
+        [~,idx_go_sort] = sort(behMat(idx_go,7)); % order trials according to movement latency from token appearance
     elseif align == 2
-        [~,idx_go_sort] = sort(BehMat(idx_go,4) + BehMat(idx_go,7)); % order trials according to movement latency from trial start
+        [~,idx_go_sort] = sort(behMat(idx_go,4) + behMat(idx_go,7)); % order trials according to movement latency from trial start
     end
     
     idx{s}.Go.Sort = idx_go(idx_go_sort);
@@ -109,13 +107,12 @@ for s = 1:length(subs)
     N_Trials_Stay = NaN(3,6);
     for tl = 1:3
         for pl = 1:6
-            idx{s}.Go.Conds{tl,pl} = find(TL == tl & PL == pl-1 & Trls == 1);
-            idx{s}.Stay.Conds{tl,pl} = find(TL == tl & PL == pl-1 & Trls == -1);
+            idx{s}.Go.Conds{tl,pl} = find(TL == tl & PL == pl-1 & trialsRetain == 1);
+            idx{s}.Stay.Conds{tl,pl} = find(TL == tl & PL == pl-1 & trialsRetain == -1);
             N_Trials_Stay(tl,pl) = length(idx{s}.Stay.Conds{tl,pl}); 
         end
     end
     N_Trials_Stay_All = N_Trials_Stay_All + N_Trials_Stay;
     
 end
-SS_ex  = [P_ex' N_ex'];
 
