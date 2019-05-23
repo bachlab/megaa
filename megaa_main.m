@@ -125,7 +125,7 @@ end, clear Out_0
 file_2 = fullfile(outFolder,'Out_S2_OptLas');
 if steps.findLasso
     if ~exist('Out_1','var'), load(file_1,'Out_1'), end
-    Out_2 = MEG_2_OptLas(param,Out_1);
+    Out_2 = megaa_optimiseLambda(param,Out_1);
     save(file_2,'Out_2')
 end
 
