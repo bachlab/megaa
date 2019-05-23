@@ -41,7 +41,7 @@ xlabel('Time (ms)'), ylabel('Balanced accuracy')
 ylim([0.48 0.70])
 xlim([0 500])
 clear x dev_Cau_avg dev_Col_avg OptBin_shift TimeOut_thh_idx dev_Sum_avg
-keyboard
+
 
 %% Run training at optimal bin with difference lambda coefficients
 % ----------------------------------------------------------------
@@ -89,6 +89,9 @@ for s = 1:length(subs)
     xlim([lasso(1) lasso(end)])
     title(['sub #',num2str(subs(s))])
 end
+
+%% Prepare output
+% ----------------------------------------------------------------
 out.OptLasso_Cau = optLasso_Cau;
 out.OptLasso_Col = optLasso_Col;
 out.OptDevia_Cau = dev_Cau;

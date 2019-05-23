@@ -12,8 +12,8 @@ num_NullEx  = par.NumNullEx;
 n_trials    = par.NumTrials;
 kfold       = 10;
 fs          = filesep;
-whichThreatProb = par.whichThreatProb;
-whichThreatMagn = par.whichThreatMagn;
+whichTp     = par.whichTpTrain;
+whichTm     = par.whichTmTrain;
 
 % Take subject-specific vector of channels retained
 channels = In.Chan_sub; clear In
@@ -58,10 +58,10 @@ for s = 1:length(par.subs)
     
     % If we want to consider all threat probabilities and/or magnitudes 
     % (i.e. par = 100), set a condition that is always true.
-    if whichThreatProb == 100
+    if whichTp == 100
         threatProb = 100*ones(length(behMat),1);
     end
-    if whichThreatMagn == 100
+    if whichTm == 100
         threatMagn = 100*ones(length(behMat),1);
     end
     
@@ -69,8 +69,8 @@ for s = 1:length(par.subs)
     trials_Col = zeros(length(behMat),1);
     trials_Cau = zeros(length(behMat),1);
     for j = 1:length(trials_Col)
-        trials_Col(j) = ~isempty(find(game(j).posmat(:,7),1)) && game(j).tokenrecord == 1 && threatProb(j) == whichThreatProb && threatMagn(j) == whichThreatMagn;
-        trials_Cau(j) = ~isempty(find(game(j).posmat(:,3) + game(j).posmat(:,4) == 3 ,1)) && threatProb(j) == whichThreatProb && threatMagn(j) == whichThreatMagn;
+        trials_Col(j) = ~isempty(find(game(j).posmat(:,7),1)) && game(j).tokenrecord == 1 && threatProb(j) == whichTp && threatMagn(j) == whichTm;
+        trials_Cau(j) = ~isempty(find(game(j).posmat(:,3) + game(j).posmat(:,4) == 3 ,1)) && threatProb(j) == whichTp && threatMagn(j) == whichTm;
     end
     clear game j
     

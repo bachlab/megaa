@@ -17,27 +17,26 @@ addpath(genpath([pwd,fs,'MEG_routines']))
 
 %% Analysis parameters
 % -------------------------------------------------------------
-param.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
-param.ebCorr = 0;       % Correct eyeblink artefacts?
-param.NumNullEx = 0;    % Number of null examples taken before trial onset.
-param.timeBin = 30;
-outOne = ['_Col_',num2str(param.timeBin*10),'ms_threatMagn3'];        % Which outcome to consider?
-param.subs = [1:5 7:9 11:25]; % Subjects
+par.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
+par.ebCorr = 0;       % Correct eyeblink artefacts?
+par.NumNullEx = 0;    % Number of null examples taken before trial onset.
+par.timeBin = 30;
+par.subs = [1:5 7:9 11:25]; % Subjects
 % param.subs = [14:25]; % Subjects
-param.NumRuns = 6;      % Number of experimental runs
-param.NumTrials = 540;  % Number of trials per subject
-param.NumPerm = 100;    % Number of permutations for statistical testing
-param.NumTrainBins = 100; % Number of (10ms) time bins to consider after outcome presentation to define training set
-param.NullOnset = 50;   % Where to take data for null examples
-param.whichThreatProb = 100;
-param.whichThreatMagn = 3;
+par.NumRuns = 6;      % Number of experimental runs
+par.NumTrials = 540;  % Number of trials per subject
+par.NumPerm = 100;    % Number of permutations for statistical testing
+par.NumTrainBins = 100; % Number of (10ms) time bins to consider after outcome presentation to define training set
+par.NullOnset = 50;   % Where to take data for null examples
+par.whichTpTrain = 3; % Which threat prob. to include for training (100 = all)
+par.whichTmTrain = 100; % Which threat magn. to include for training (100 = all)
 
 % Select whether to align to token appearance (1) or trial start (2)
-param.align = 2;
-if param.align == 1
-    param.deliberTime = 300;
-elseif param.align == 2
-    param.deliberTime = 1500;
+par.align = 2;
+if par.align == 1
+    par.deliberTime = 300;
+elseif par.align == 2
+    par.deliberTime = 1500;
 end
 
 % Select which steps to run
@@ -45,10 +44,10 @@ steps.preprocess = 0;
 steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
-steps.findBin = 1;
+steps.findBin = 0;
 steps.findLasso = 1;
-steps.createClass = 0;
-steps.classify = 0;
+steps.createClass = 1;
+steps.classify = 1;
 steps.autocorr = 0;
 steps.bf = 0;
 
@@ -56,12 +55,13 @@ steps.bf = 0;
 % -------------------------------------------------------------
 
 % create analysis folder
-outFolder = [pwd,fs,'MEG_out',fs,'E',int2str(param.ebCorr),'S',int2str(param.NumSens),'B',int2str(param.NumNullEx),outOne];
+outOne = ['_Col_',num2str(par.timeBin*10),'ms_threatProb',num2str(par.whichTpTrain)];   
+outFolder = [pwd,fs,'MEG_out',fs,'E',int2str(par.ebCorr),'S',int2str(par.NumSens),'B',int2str(par.NumNullEx),outOne];
 mkdir([outFolder,fs,'TokApp'])
 mkdir([outFolder,fs,'TrlSrt'])
 
 % Select whether to take uncorrected data or data after eyeblink removal
-if param.ebCorr == 0
+if par.ebCorr == 0
     folders.scan = [pwd,fs,'MEG_data',fs,'imported',fs];
 else
     folders.scan = [pwd,fs,'MEG_data',fs,'scanner_v2',fs];
@@ -80,15 +80,15 @@ end
 
 %% Correct eyeblinks artefacts if needed
 % -------------------------------------------------------------
-if param.ebCorr == 1 && steps.corrEye
-    MEG_0_CorrectEyeBlinks(param,folders);
+if par.ebCorr == 1 && steps.corrEye
+    MEG_0_CorrectEyeBlinks(par,folders);
 end
 
 
 %% Cut epochs
 % -------------------------------------------------------------
 if steps.cutEpoch
-    MEG_0_Epochs(param,folders);
+    MEG_0_Epochs(par,folders);
 end
 
 
@@ -98,13 +98,13 @@ file_0 = fullfile(outFolder,'Out_S0_channels');
 if steps.findChan
     
     % if subset of channels, take those with least eyeblinks
-    if param.NumSens < 275
-        Out_0 = MEG_0_OptChan(param,folders);
+    if par.NumSens < 275
+        Out_0 = megaa_findChannels(par,folders);
         
         % otherwise take them all
     else
-        Out_0.Chan_sub = repmat((33:307)',1,length(param.subs));
-        Out_0.Chan_tot = repmat((33:307)',1,length(param.subs));
+        Out_0.Chan_sub = repmat((33:307)',1,length(par.subs));
+        Out_0.Chan_tot = repmat((33:307)',1,length(par.subs));
     end
     save(file_0,'Out_0')
 end
@@ -115,7 +115,7 @@ end
 file_1 = fullfile(outFolder,'Out_S1_OptBin');
 if steps.findBin
     if ~exist('Out_0','var'), load(file_0,'Out_0'), end
-    Out_1 = megaa_cvPerformance(param,folders,Out_0);
+    Out_1 = megaa_cvPerformance(par,folders,Out_0);
     save(file_1,'Out_1','-v7.3')
 end, clear Out_0
 
@@ -125,7 +125,7 @@ end, clear Out_0
 file_2 = fullfile(outFolder,'Out_S2_OptLas');
 if steps.findLasso
     if ~exist('Out_1','var'), load(file_1,'Out_1'), end
-    Out_2 = megaa_optimiseLambda(param,Out_1);
+    Out_2 = megaa_optimiseLambda(par,Out_1);
     save(file_2,'Out_2')
 end
 
@@ -138,8 +138,8 @@ if steps.createClass
     if ~exist('Out_2','var'), load(file_2,'Out_2'), end
     
     % Decide which script to use based on whether we include null examples
-    if param.NumNullEx == 0
-        Out_3 = MEG_3_CreCla(param,Out_1,Out_2);
+    if par.NumNullEx == 0
+        Out_3 = megaa_createClassifier(par,Out_1,Out_2);
     else
         Out_3 = MEG_3_CreClaVsBase(set_par,Out_1,Out_2);
     end
@@ -149,18 +149,18 @@ end, clear Out_2
 
 %% Classify deliberation phase
 % -------------------------------------------------------------
-if param.align == 1
-    AlFold = fullfile(outFolder,'/TokApp');
-elseif param.align == 2
-    AlFold = fullfile(outFolder,'/TrlSrt');
+if par.align == 1
+    alignmentFolder = fullfile(outFolder,'/TokApp');
+elseif par.align == 2
+    alignmentFolder = fullfile(outFolder,'/TrlSrt');
 end
-file_4 = fullfile(AlFold,'/Out_S4_AnaDel');
+file_4 = fullfile(alignmentFolder,'/Out_S4_AnaDel');
 if steps.classify
     if ~exist('Out_1','var'), load(file_1,'Out_1'), end
     if ~exist('Out_3','var'), load(file_3,'Out_3'), end
-    Out_4 = MEG_4_AnaDel(param,folders,Out_1,Out_3);
-    save(file_4,'Out_4','-v7.3')
-    MEG_4_PrepareInputLme(param,AlFold,Out_4);
+    out_4 = megaa_classifyDelib(par,folders,Out_1,Out_3);
+    save(file_4,'out_4','-v7.3')
+    MEG_4_PrepareInputLme(par,alignmentFolder,out_4);
 end, clear Out_3
 
 
@@ -174,8 +174,8 @@ keyboard
 %% separate conditions
 % -------------------------------------------------------------
 load(file_1,'Out_1')
-file_lmeCond = fullfile(AlFold,'lmeCond');
-[Out_5, lmeCond] = MEG_6_SepCon(param,folders,Out_1);
+file_lmeCond = fullfile(alignmentFolder,'lmeCond');
+[Out_5, lmeCond] = MEG_6_SepCon(par,folders,Out_1);
 save(file_lmeCond,'lmeCond'), clear file_lmeCond
 
 
@@ -183,10 +183,10 @@ save(file_lmeCond,'lmeCond'), clear file_lmeCond
 % -------------------------------------------------------------
 
 % Load file containing (real) outcome probability during deliberation
-load([AlFold,filesep,'lmeData',filesep,'lme_Real.mat'])
+load([alignmentFolder,filesep,'lmeData',filesep,'lme_Real.mat'])
 
 % Loop over deliberation time points
-for i = 1:round(param.deliberTime/10)
+for i = 1:round(par.deliberTime/10)
     
     outProb = log(lme_Real.Col(:,i)./(1-lme_Real.Col(:,i)));
     outProb(outProb == Inf) = 100;
@@ -215,7 +215,7 @@ figure('color',[1 1 1])
 
 %% Behaviour <------- make this code nicer
 % -------------------------------------------------------------
-MEG_Behaviour(param,folders);
+MEG_Behaviour(par,folders);
 
 
 %% Autocorrelation
@@ -223,26 +223,26 @@ MEG_Behaviour(param,folders);
 if steps.autocorr
     if ~exist('Out_4','var'), load(file_4,'Out_4'), end
     if ~exist('Out_5','var'), load(file_5,'Out_5'), end
-    Out_AutoC = MEG_autocorr(param,Out_4,Out_5);
-    MEG_PermTest_AutoC(param,Out_AutoC);
+    Out_AutoC = MEG_autocorr(par,out_4,Out_5);
+    MEG_PermTest_AutoC(par,Out_AutoC);
 end
 
 
 %% compute single-subject averages with real and permuted labels
 if ~exist('Out_4','var'), load(file_4,'Out_4'), end
 if ~exist('Out_5','var'), load(file_5,'Out_5'), end
-In = Out_4.PredCont;
-Out_SSreal = MEG_6_SS_avg(param,In,Out_1,Out_5,[0 1]);
+In = out_4.PredCont;
+Out_SSreal = MEG_6_SS_avg(par,In,Out_1,Out_5,[0 1]);
 keyboard
-for s = 1:length(param.subs)
+for s = 1:length(par.subs)
     MeanReal_Col(s,:) = smooth(Out_SSreal{s}.Col.All); %#ok<SAGROW>
     MeanReal_Cau(s,:) = smooth(Out_SSreal{s}.Cau.All); %#ok<SAGROW>
 end
-Out_SSperm = cell(param.NumPerm,1);
-for p = 1:param.NumPerm
-    In_perm = Out_4.PredCont_perm(:,p);
-    Out_SSperm{p} = MEG_6_SS_avg(param,In_perm,Out_1,Out_5,[0 0]);
-    for s = 1:length(param.subs)
+Out_SSperm = cell(par.NumPerm,1);
+for p = 1:par.NumPerm
+    In_perm = out_4.PredCont_perm(:,p);
+    Out_SSperm{p} = MEG_6_SS_avg(par,In_perm,Out_1,Out_5,[0 0]);
+    for s = 1:length(par.subs)
         foo_Col(s,:) = Out_SSperm{p}{s}.Col.All;
         foo_Cau(s,:) = Out_SSperm{p}{s}.Cau.All;
     end
@@ -254,7 +254,7 @@ subplot(2,1,1),plot(PermMeans_Cau','color',[0 0 0]),hold on,plot(mean(MeanReal_C
 subplot(2,1,2),plot(PermMeans_Col','color',[0 0 0]),hold on,plot(mean(MeanReal_Col),'color',[0 0 1],'linewidth',2)
 
 clear Out_5 Out_6
-MEG_DataClusters(param,Out_SSreal,Out_SSperm)
+MEG_DataClusters(par,Out_SSreal,Out_SSperm)
 
 %% cluster plot and analysis
 MEG_7_PermTest

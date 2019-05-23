@@ -1,4 +1,4 @@
-function Out_1 = MEG_0_OptChan(set_par,folders)
+function out = megaa_findChannels(set_par,folders)
 % G Castegnetti 2017
 % find best channels according to number of eyeblinks
 
@@ -40,7 +40,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% 32 MUST BE ADDED TO OFFSET THE CHANNEL NUMBERS %%%%%%%%%%%%%%
-Out_1.Chan_sub = 32 + Chan_sub;
-Out_1.Chan_tot = 32 + idx_sort_tot(1:ChToRetain); % retain only so many channels
+out.Chan_sub = 32 + Chan_sub;
+out.Chan_tot = 32 + idx_sort_tot(1:ChToRetain); % retain only so many channels
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
