@@ -22,7 +22,7 @@ function [fillhandle,msg]=jbfill(xpoints,upper,lower,color,edge,add,transparency
 %     [ph,msg]=jbfill(x,a,b,rand(1,3),rand(1,3),0,rand(1,1))
 %     grid on
 %     legend('Datr')
-if nargin<7;transparency=.25;end %default is to have a transparency of .5
+if nargin<7;transparency=0.1;end %default is to have a transparency of .5
 if nargin<6;add=1;end     %default is to add to current plot
 if nargin<5;edge='w';end  %dfault edge color is white
 if nargin<4;color='b';end %default color is blue

@@ -27,11 +27,11 @@ par.NumTrials = 540;  % Number of trials per subject
 par.NumPerm = 100;    % Number of permutations for statistical testing
 par.NumTrainBins = 100; % Number of (10ms) time bins to consider after Outcome presentation to define training set
 par.NullOnset = 50;   % Where to take data for null examples
-par.whichTpTrain = 3; % Which threat prob. to include for training (100 = all)
+par.whichTpTrain = 100; % Which threat prob. to include for training (100 = all)
 par.whichTmTrain = 100; % Which threat magn. to include for training (100 = all)
 
 % Select whether to align to token appearance (1) or trial start (2)
-par.align = 2;
+par.align = 1;
 if par.align == 1
     par.deliberTime = 300;
 elseif par.align == 2
@@ -46,7 +46,7 @@ steps.findChan = 0;
 steps.findBin = 0;
 steps.findLasso = 0;
 steps.createClass = 0;
-steps.classify = 0;
+steps.classify = 1;
 steps.autocorr = 0;
 steps.bf = 0;
 
@@ -54,7 +54,11 @@ steps.bf = 0;
 % -------------------------------------------------------------
 
 % create analysis folder
-OutOne = ['_Col_',num2str(par.timeBin*10),'ms_threatProb',num2str(par.whichTpTrain)];   
+if par.whichTpTrain < 100
+    OutOne = ['_Col_',num2str(par.timeBin*10),'ms_threatProb',num2str(par.whichTpTrain)];
+else
+    OutOne = ['_Col_',num2str(par.timeBin*10),'ms'];
+end
 OutFolder = [pwd,fs,'MEG_Out',fs,'E',int2str(par.ebCorr),'S',int2str(par.NumSens),'B',int2str(par.NumNullEx),OutOne];
 mkdir([OutFolder,fs,'TokApp'])
 mkdir([OutFolder,fs,'TrlSrt'])
@@ -109,7 +113,7 @@ if steps.findChan
 end
 
 
-%% Find time bin (after Outcome presentation) for training data
+%% Find time bin (after outcome presentation) for training data
 % -------------------------------------------------------------
 file_1 = fullfile(OutFolder,'Out_S1_OptBin');
 if steps.findBin

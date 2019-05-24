@@ -77,6 +77,6 @@ for s = 1:length(subs)
     
     % Condition matrix
     % --------------------------------------------------------
-    conditions = [trialsRetain, threatProb', threatMagn'];
+    conditions{s} = [trialsRetain, threatProb', threatMagn'];
     
 end
