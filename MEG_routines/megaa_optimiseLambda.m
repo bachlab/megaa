@@ -45,7 +45,7 @@ clear x dev_Cau_avg dev_Col_avg OptBin_shift TimeOut_thh_idx dev_Sum_avg
 
 %% Run training at optimal bin with difference lambda coefficients
 % ----------------------------------------------------------------
-lasso = 0.0005:0.0005:0.01;
+lasso = 0.0005:0.0005:0.1;
 parfor s = 1:length(subs)
     
     disp(['Sub#',int2str(s),' of ',int2str(length(subs)),'...']); % update user

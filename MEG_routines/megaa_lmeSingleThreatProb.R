@@ -14,7 +14,7 @@ Sys.setenv(LANG = "en")
 
 # specify folders
 # -------------------------------------------------------------
-folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms_threatProb3/TrlSrt/'
+folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms_threatProb1/TrlSrt/'
 folder_out <- paste(folder_in,'From_R/',sep = '')
 dir.create(folder_out, showWarnings = TRUE, recursive = FALSE, mode = "0777")
 
@@ -51,7 +51,7 @@ PREV <- M.Cond[ ,7] # previous outcome - fixed factor
 MinDur <- 150
 
 # remove NaNs
-indx <- which(is.nan(GO) | TL == 1 | TL == 3)
+indx <- which(is.nan(GO) | TL == 1 | TL == 2)
 SUBJ <- SUBJ[-indx]
 RUNN <- RUNN[-indx]
 TRLL <- TRLL[-indx]
