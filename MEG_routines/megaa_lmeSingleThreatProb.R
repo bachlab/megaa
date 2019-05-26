@@ -14,8 +14,8 @@ Sys.setenv(LANG = "en")
 
 # specify folders
 # -------------------------------------------------------------
-folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms_threatProb1/TrlSrt/'
-folder_out <- paste(folder_in,'From_R/',sep = '')
+folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms/TrlSrt/'
+folder_out <- paste(folder_in,'from_R/',sep = '')
 dir.create(folder_out, showWarnings = TRUE, recursive = FALSE, mode = "0777")
 
 NumPerm = 100;
@@ -140,12 +140,12 @@ if (permute == 1){
 ncoef <- dim(coef(mdl.Real.Cau[[1]])[[1]])
 df2 <- length(Y.Cau) - (ncoef[1] + ncoef[2] - 1)
 
+writeMat(con = paste(folder_out,'tVal_realCol_33.mat',sep = ''), x = F.Real.Col)
+
 # save.image()
 # Write data for Matlab
 # -------------------------------------------------------------
 if (permute == 1){
-  writeMat(con = paste(folder_out,'R_out_Real_Cau.mat',sep = ''), x = F.Real.Cau)
-  writeMat(con = paste(folder_out,'R_out_Real_Col.mat',sep = ''), x = F.Real.Col)
   writeMat(con = paste(folder_out,'R_out_Perm_Cau.mat',sep = ''), x = F.Perm.Cau)
   writeMat(con = paste(folder_out,'R_out_Perm_Col.mat',sep = ''), x = F.Perm.Col)
   writeMat(con = paste(folder_out,'R_out_df2.mat',sep = ''), x = df2)

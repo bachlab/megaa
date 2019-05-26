@@ -14,25 +14,25 @@ Sys.setenv(LANG = "en")
 
 # specify folders
 # -------------------------------------------------------------
-folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms/TrlSrt'
+folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms/TrlSrt/'
 folder_out <- paste(folder_in,'From_R/',sep = '')
 dir.create(folder_out, showWarnings = TRUE, recursive = FALSE, mode = "0777")
 
 NumPerm = 100;
-permute = 0;
+permute = 1;
 
 # read conditions
 # -------------------------------------------------------------
-cn <- paste(folder_in,'R_Cond.mat',sep = '')
+cn <- paste(folder_in,'lmeCond.mat',sep = '')
 inCond <- readMat(cn)
-M.Cond <- inCond$R.Cond
+M.Cond <- inCond$lmeCond
 
 # read data
 # -------------------------------------------------------------
-fn <- paste(folder_in,'R_Data/R_Real.mat',sep = '')
+fn <- paste(folder_in,'lmeData/lme_Real.mat',sep = '')
 indata.Real <- readMat(fn)
-M.Real.Cau <- as.data.frame(indata.Real$R.Real[[1]])
-M.Real.Col <- as.data.frame(indata.Real$R.Real[[2]])
+M.Real.Cau <- as.data.frame(indata.Real$lme.Real[[1]])
+M.Real.Col <- as.data.frame(indata.Real$lme.Real[[2]])
 
 M.Real.Cau <- logit(M.Real.Cau)
 M.Real.Col <- logit(M.Real.Col)
@@ -51,7 +51,7 @@ PREV <- M.Cond[ ,7] # previous outcome - fixed factor
 MinDur <- 150
 
 # remove NaNs
-indx <- which(is.nan(GO) || PREV == 0)
+indx <- which(is.nan(GO))
 SUBJ <- SUBJ[-indx]
 RUNN <- RUNN[-indx]
 TRLL <- TRLL[-indx]
@@ -108,7 +108,7 @@ if (permute == 1){
     print(paste('Permutation#',toString(p), sep = '')) # update user
     
     # select file
-    fn <- paste(folder_in,'R_Data/R_Perm_',toString(p),'.mat',sep = '')
+    fn <- paste(folder_in,'lmeData/lme_Perm_',toString(p),'.mat',sep = '')
     indata.Perm <- readMat(fn)
     M.Perm.Cau <- as.data.frame(indata.Perm$R.Perm[[1]])
     M.Perm.Col <- as.data.frame(indata.Perm$R.Perm[[2]])

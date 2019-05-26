@@ -8,7 +8,7 @@ restoredefaultpath
 % addpath D:\MATLAB\MATLAB_scripts\MEG\MEG_STEPs_outputs\ECGLO135\MEG_OUT_B50\From_R
 restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 addpath(genpath([pwd,filesep,'MEG_routines']))
-addpath /Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms_threatProb1/TrlSrt/From_R
+addpath /Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms/TrlSrt/From_R
 
 load('R_out_Real_Cau')
 F_Real_Cau = x;
@@ -62,30 +62,6 @@ Fstatperm = squeeze(F_Perm_Cau(3,:,:))';
 pcluster.Cau.GO = permtest(Fstat, Fstatperm, F_thr_GO);
 SignClusters.Cau.GO = pcluster.Cau.GO > 0.95;
 
-%% TL:PL Cau
-Fstat = F_Real_Cau(4,:);
-Fstatperm = squeeze(F_Perm_Cau(4,:,:))';
-pcluster.Cau.TL_PL = permtest(Fstat, Fstatperm, F_thr_TL_PL);
-SignClusters.Cau.TL_PL = pcluster.Cau.TL_PL > 0.95;
-
-%% TL:GO Cau
-Fstat = F_Real_Cau(5,:);
-Fstatperm = squeeze(F_Perm_Cau(5,:,:))';
-pcluster.Cau.TL_GO = permtest(Fstat, Fstatperm, F_thr_TL_GO);
-SignClusters.Cau.TL_GO = pcluster.Cau.TL_GO > 0.95;
-
-%% PL:GO Cau
-Fstat = F_Real_Cau(6,:);
-Fstatperm = squeeze(F_Perm_Cau(6,:,:))';
-pcluster.Cau.PL_GO = permtest(Fstat, Fstatperm, F_thr_PL_GO);
-SignClusters.Cau.PL_GO = pcluster.Cau.PL_GO > 0.95;
-
-%% TL:PL:GO Cau
-Fstat = F_Real_Cau(7,:);
-Fstatperm = squeeze(F_Perm_Cau(7,:,:))';
-pcluster.Cau.TL_PL_GO = permtest(Fstat, Fstatperm, F_thr_TL_PL_GO);
-SignClusters.Cau.TL_PL_GO = pcluster.Cau.TL_PL_GO > 0.95;
-
 %% TL Col
 Fstat = F_Real_Col(1,:);
 Fstatperm = squeeze(F_Perm_Col(1,:,:))';
@@ -104,29 +80,6 @@ Fstatperm = squeeze(F_Perm_Col(3,:,:))';
 pcluster.Col.GO = permtest(Fstat, Fstatperm, F_thr_GO);
 SignClusters.Col.GO = pcluster.Col.GO > 0.95;
 
-%% TL:PL Col
-Fstat = F_Real_Col(4,:);
-Fstatperm = squeeze(F_Perm_Col(4,:,:))';
-pcluster.Col.TL_PL = permtest(Fstat, Fstatperm, F_thr_TL_PL);
-SignClusters.Col.TL_PL = pcluster.Col.TL_PL > 0.95;
-
-%% TL:GO Col
-Fstat = F_Real_Col(5,:);
-Fstatperm = squeeze(F_Perm_Col(5,:,:))';
-pcluster.Col.TL_GO = permtest(Fstat, Fstatperm, F_thr_TL_GO);
-SignClusters.Col.TL_GO = pcluster.Col.TL_GO > 0.95;
-
-%% PL:GO Col
-Fstat = F_Real_Col(6,:);
-Fstatperm = squeeze(F_Perm_Col(6,:,:))';
-pcluster.Col.PL_GO = permtest(Fstat, Fstatperm, F_thr_PL_GO);
-SignClusters.Col.PL_GO = pcluster.Col.PL_GO > 0.95;
-
-%% TL:PL:GO Col
-Fstat = F_Real_Col(7,:);
-Fstatperm = squeeze(F_Perm_Col(7,:,:))';
-pcluster.Col.TL_PL_GO = permtest(Fstat, Fstatperm, F_thr_TL_PL_GO);
-SignClusters.Col.TL_PL_GO = pcluster.Col.TL_PL_GO > 0.95;
 
 %% plot Cau
 
@@ -141,19 +94,6 @@ subplot(3,2,5),plot(xspan,F_Real_Cau(3,:),'color','b','linestyle','none','marker
 plot(xspan(SignClusters.Cau.GO),F_Real_Cau(3,SignClusters.Cau.GO),'color','r','linestyle','none','marker','.','markersize',15)
 title('Neg+, Approach/avoidance','fontsize',14), set(gca,'fontsize',14), xlim([0 xend])
 
-h4 = figure('color',[1 1 1]);
-subplot(4,2,1),plot(xspan,F_Real_Cau(4,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Cau.TL_PL),F_Real_Cau(4,SignClusters.Cau.TL_PL),'color','r','linestyle','none','marker','.','markersize',15)
-title('Neg+, TL:PL','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
-subplot(4,2,3),plot(xspan,F_Real_Cau(5,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Cau.TL_GO),F_Real_Cau(5,SignClusters.Cau.TL_GO),'color','r','linestyle','none','marker','.','markersize',15)
-title('Neg+, TL:GO','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
-subplot(4,2,5),plot(xspan,F_Real_Cau(6,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Cau.PL_GO),F_Real_Cau(6,SignClusters.Cau.PL_GO),'color','r','linestyle','none','marker','.','markersize',15)
-title('Neg+, PL:GO','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
-subplot(4,2,7),plot(xspan,F_Real_Cau(7,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Cau.TL_PL_GO),F_Real_Cau(7,SignClusters.Cau.TL_PL_GO),'color','r','linestyle','none','marker','.','markersize',15)
-title('Neg+, TL:PL:GO','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
 
 %% plot Col
 figure(h3)
@@ -167,17 +107,4 @@ subplot(3,2,6),plot(xspan,F_Real_Col(3,:),'color','b','linestyle','none','marker
 plot(xspan(SignClusters.Col.GO),F_Real_Col(3,SignClusters.Col.GO),'color','r','linestyle','none','marker','.','markersize',15)
 title('Pos+, Approach/avoidance','fontsize',14), set(gca,'fontsize',14), xlim([0 xend])
 
-figure(h4)
-subplot(4,2,2),plot(xspan,F_Real_Col(4,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Col.TL_PL),F_Real_Col(4,SignClusters.Col.TL_PL),'color','r','linestyle','none','marker','.','markersize',15)
-title('Pos+, TL:PL','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
-subplot(4,2,4),plot(xspan,F_Real_Col(5,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Col.TL_GO),F_Real_Col(5,SignClusters.Col.TL_GO),'color','r','linestyle','none','marker','.','markersize',15)
-title('Pos+, TL:GO','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
-subplot(4,2,6),plot(xspan,F_Real_Col(6,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Col.PL_GO),F_Real_Col(6,SignClusters.Col.PL_GO),'color','r','linestyle','none','marker','.','markersize',15)
-title('Pos+, PL:GO','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
-subplot(4,2,8),plot(xspan,F_Real_Col(7,:),'color','b','linestyle','none','marker','.','markersize',15),hold on
-plot(xspan(SignClusters.Col.TL_PL_GO),F_Real_Col(7,SignClusters.Col.TL_PL_GO),'color','r','linestyle','none','marker','.','markersize',15)
-title('Pos+, TL:PL:GO','fontsize',12), set(gca,'fontsize',14), xlim([0 xend])
 

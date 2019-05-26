@@ -6,7 +6,7 @@
 % GX Castegnetti --- start 08/2016 --- last update 05/2019
 
 clear
-close all
+% close all
 
 restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 fs = filesep;
@@ -27,7 +27,7 @@ par.NumTrials = 540;  % Number of trials per subject
 par.NumPerm = 100;    % Number of permutations for statistical testing
 par.NumTrainBins = 100; % Number of (10ms) time bins to consider after Outcome presentation to define training set
 par.NullOnset = 50;   % Where to take data for null examples
-par.whichTpTrain = 1; % Which threat prob. to include for training (100 = all)
+par.whichTpTrain = 100; % Which threat prob. to include for training (100 = all)
 par.whichTmTrain = 100; % Which threat magn. to include for training (100 = all)
 
 % Select whether to align to token appearance (1) or trial start (2)
