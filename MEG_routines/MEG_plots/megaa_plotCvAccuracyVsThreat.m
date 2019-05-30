@@ -66,6 +66,7 @@ x = 10:10:1000;
 % x = x';
 
 % Threat probability
+% -------------------------------------------------------------
 figure('color',[1 1 1])
 plot(x,accuracyAvg1,'linewidth',2),hold on
 plot(x,accuracyAvg2,'linewidth',2)
@@ -81,17 +82,32 @@ ylim([0.48 0.70])
 xlim([0 750])
 
 % Threat magnitude
+% -------------------------------------------------------------
+% figure('color',[1 1 1])
+% plot(x,accuracyAvgm0,'linewidth',2,'color',[0.75,0.75,0.75]),hold on
+% plot(x,accuracyAvgm1,'linewidth',2,'color',[0.60,0.60,0.60])
+% plot(x,accuracyAvgm2,'linewidth',2,'color',[0.45,0.45,0.45])
+% plot(x,accuracyAvgm3,'linewidth',2,'color',[0.30,0.30,0.30])
+% jbfill(x,accuracyAvgm0+accuracySemm0,accuracyAvgm0-accuracySemm0,[0.75,0.75,0.75]); hold on
+% jbfill(x,accuracyAvgm1+accuracySemm1,accuracyAvgm1-accuracySemm1,[0.60,0.60,0.60]); hold on
+% jbfill(x,accuracyAvgm2+accuracySemm2,accuracyAvgm2-accuracySemm2,[0.45,0.45,0.45]); hold on
+% jbfill(x,accuracyAvgm3+accuracySemm3,accuracyAvgm3-accuracySemm3,[0.30,0.30,0.30]); hold on
+% plot(x,0.5*ones(length(x),1),'color',[0.4 0.4 0.4],'linestyle','--','linewidth',1.5)
+% legend('Threat magn. = 0','Threat magn. = 1','Threat magn. = 2','Threat magn. = 3')
+% set(gca,'FontSize',14)
+% xlabel('Time (ms)'), ylabel('Balanced accuracy')
+% ylim([0.48 0.70])
+% xlim([0 750])
+
 figure('color',[1 1 1])
 plot(x,accuracyAvgm0,'linewidth',2,'color',[0.75,0.75,0.75]),hold on
-plot(x,accuracyAvgm1,'linewidth',2,'color',[0.60,0.60,0.60])
-plot(x,accuracyAvgm2,'linewidth',2,'color',[0.45,0.45,0.45])
-plot(x,accuracyAvgm3,'linewidth',2,'color',[0.30,0.30,0.30])
+plot(x,accuracyAvgm1,'linewidth',2,'color',[0.45,0.45,0.45])
+plot(x,accuracyAvgm2,'linewidth',2,'color',[0.15,0.15,0.15])
 jbfill(x,accuracyAvgm0+accuracySemm0,accuracyAvgm0-accuracySemm0,[0.75,0.75,0.75]); hold on
-jbfill(x,accuracyAvgm1+accuracySemm1,accuracyAvgm1-accuracySemm1,[0.60,0.60,0.60]); hold on
-jbfill(x,accuracyAvgm2+accuracySemm2,accuracyAvgm2-accuracySemm2,[0.45,0.45,0.45]); hold on
-jbfill(x,accuracyAvgm3+accuracySemm3,accuracyAvgm3-accuracySemm3,[0.30,0.30,0.30]); hold on
+jbfill(x,accuracyAvgm1+accuracySemm1,accuracyAvgm1-accuracySemm1,[0.45,0.45,0.45]); hold on
+jbfill(x,accuracyAvgm2+accuracySemm2,accuracyAvgm2-accuracySemm2,[0.15,0.15,0.15]); hold on
 plot(x,0.5*ones(length(x),1),'color',[0.4 0.4 0.4],'linestyle','--','linewidth',1.5)
-legend('Threat magn. = 0','Threat magn. = 1','Threat magn. = 2','Threat magn. = 3')
+legend('Threat magn. = 0','Threat magn. = 1','Threat magn. = 2')
 set(gca,'FontSize',14)
 xlabel('Time (ms)'), ylabel('Balanced accuracy')
 ylim([0.48 0.70])

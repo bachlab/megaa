@@ -181,8 +181,8 @@ for s = 1:length(par.subs)
             y_Col_red = y_Col; y_Col_red(testSet) = []; % Col outcomes
             y_Bas_red = y_Bas; y_Bas_red(testSet) = []; % Bas outcomes
             
-            [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.01); % regression with Cau positive examples
-            [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.01); % regression with Col positive examples
+            [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Cau positive examples
+            [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Col positive examples
             
             % Cau predictions
             foo_Cau = sum(repmat(foo_Coeff_Cau,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Cau.Intercept;

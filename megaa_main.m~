@@ -14,7 +14,7 @@ fs = filesep;
 addpath('/Users/gcastegnetti/Desktop/tools/matlab/spm12')
 addpath(genpath([pwd,fs,'MEG_routines']))
 
-% spm eeg
+% spm eeg 
 
 %% Analysis parameters
 % -------------------------------------------------------------
@@ -29,10 +29,10 @@ par.NumPerm = 100;    % Number of permutations for statistical testing
 par.NumTrainBins = 100; % Number of (10ms) time bins to consider after Outcome presentation to define training set
 par.NullOnset = 50;   % Where to take data for null examples
 par.whichTpTrain = 100; % Which threat prob. to include for training (100 = all)
-par.whichTmTrain = 100; % Which threat magn. to include for training (100 = all)
+par.whichTmTrain = 0; % Which threat magn. to include for training (100 = all)
 
 % Select whether to align to token appearance (1) or trial start (2)
-par.align = 1;
+par.align = 2;
 if par.align == 1
     par.deliberTime = 300;
 elseif par.align == 2
@@ -47,7 +47,7 @@ steps.findChan = 0;
 steps.findBin = 0;
 steps.findLasso = 0;
 steps.createClass = 0;
-steps.classify = 1;
+steps.classify = 0;
 steps.autocorr = 0;
 steps.bf = 0;
 

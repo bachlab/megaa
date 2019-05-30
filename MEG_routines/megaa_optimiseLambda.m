@@ -39,7 +39,7 @@ plot(xspan,0.5*ones(length(xspan),1),'color',[0.4 0.4 0.4],'linestyle','--','lin
 set(gca,'FontSize',14)
 xlabel('Time (ms)'), ylabel('Balanced accuracy')
 ylim([0.48 0.70])
-xlim([0 500])
+xlim([0 750])
 clear x dev_Cau_avg dev_Col_avg OptBin_shift TimeOut_thh_idx dev_Sum_avg
 
 

@@ -1,7 +1,7 @@
 function balAcc = megaa_balancedAccuracy(set_par,In)
 
 n_bins = set_par.NumTrainBins;
-figure('color',[1 1 1])
+
 for s = 1:length(set_par.subs)
     for t = 1:n_bins
         %% Cau
@@ -48,32 +48,11 @@ for s = 1:length(set_par.subs)
 
         balAcc.Col(s,t) = mean([Acc_Pos_Col Acc_Neg_Col]);
         
-        %% Bas
-        % find true positives
-        foo_TP_Bas = find(In{s}.Pred_Bas(:,t) == 1 & [0*In{s}.Design(:,2); ones(set_par.NumNullEx,1)] == 1);
-        TP_Bas = length(foo_TP_Bas);
-        
-        % find true negatives
-        foo_TN_Bas = find(In{s}.Pred_Bas(:,t) == 0 & [0*In{s}.Design(:,2); ones(set_par.NumNullEx,1)] == 0);
-        TN_Bas = length(foo_TN_Bas);
-        
-        % find false positives
-        foo_FP_Bas = find(In{s}.Pred_Bas(:,t) == 1 & [0*In{s}.Design(:,2); ones(set_par.NumNullEx,1)] == 0);
-        FP_Bas = length(foo_FP_Bas);
-        
-        % find false negatives
-        foo_FN_Bas = find(In{s}.Pred_Bas(:,t) == 0 & [0*In{s}.Design(:,2); ones(set_par.NumNullEx,1)] == 1);
-        FN_Bas = length(foo_FN_Bas);
 
-        Acc_Pos_Bas = TP_Bas/(TP_Bas + FN_Bas);
-        Acc_Neg_Bas = TN_Bas/(TN_Bas + FP_Bas);
-
-        balAcc.Bas(s,t) = mean([Acc_Pos_Bas Acc_Neg_Bas]);
         
     end
     
     balAcc.Cau(s,:) = smooth(balAcc.Cau(s,:));
     balAcc.Col(s,:) = smooth(balAcc.Col(s,:));
-    balAcc.Bas(s,:) = smooth(balAcc.Bas(s,:));
     
 end
