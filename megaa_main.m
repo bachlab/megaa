@@ -21,7 +21,7 @@ spm eeg
 par.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
 par.ebCorr = 0;       % Correct eyeblink artefacts?
 par.NumNullEx = 0;    % Number of null examples taken before trial onset.
-par.timeBin = 30;
+par.timeBin = 17;
 par.subs = [1:5 7:9 11:25]; % Subjects
 par.NumRuns = 6;      % Number of experimental runs
 par.NumTrials = 540;  % Number of trials per subject
@@ -44,12 +44,12 @@ steps.preprocess = 0;
 steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
-steps.findBin = 0;
-steps.findLasso = 0;
+steps.findBin = 1;
+steps.findLasso = 1;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 1;
+steps.bf = 0;
 
 %% Folders
 % -------------------------------------------------------------

@@ -155,15 +155,12 @@ for s = 1:length(par.subs)
     bas.FitInfo = {};
     pred_Cau = nan(length(y_Cau),n_bins);
     pred_Col = nan(length(y_Cau),n_bins);
-    pred_Bas = nan(length(y_Cau),n_bins);
     
     % Loop over post-outcome time points
     for t = 1:n_bins
         x_Real = squeeze(d_Real(:,t,design(:,1)))'; % sensor data at the outcome
         x_Base = d_Nul;                            % sensor data at the baseline
         x = [x_Real; x_Base];
-        sizSets = ceil(size(x,1)/kfold);
-        setLabels = randperm(size(x,1));
         
         foo = cvpartition(y_Col,'kfold',10);
         
@@ -184,9 +181,8 @@ for s = 1:length(par.subs)
             y_Col_red = y_Col; y_Col_red(testSet) = []; % Col outcomes
             y_Bas_red = y_Bas; y_Bas_red(testSet) = []; % Bas outcomes
             
-            [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Cau positive examples
-            [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Col positive examples
-            [foo_Coeff_Bas,foo_FitInfo_Bas] = lassoglm(x_train,y_Bas_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Bas positive examples
+            [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.01); % regression with Cau positive examples
+            [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.01); % regression with Col positive examples
             
             % Cau predictions
             foo_Cau = sum(repmat(foo_Coeff_Cau,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Cau.Intercept;
@@ -196,16 +192,12 @@ for s = 1:length(par.subs)
             foo_Col = sum(repmat(foo_Coeff_Col,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Col.Intercept;
             pred_Col(testSet,t) = round(1./(1+exp(-foo_Col)));
             
-            % Bas predictions
-            foo_Bas = sum(repmat(foo_Coeff_Bas,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Bas.Intercept;
-            pred_Bas(testSet,t) = round(1./(1+exp(-foo_Bas)));
         end
     end
     clear t t_Null RandOnsets_Null X_Real X_Base X Y_Cau Y_Col Cau Col
     
     out{s}.Pred_Cau = pred_Cau;
     out{s}.Pred_Col = pred_Col;
-    out{s}.Pred_Bas = pred_Bas;
     out{s}.Chan = channels(:,s);
     out{s}.Design = design;
     out{s}.BasTrl = TrlRem;

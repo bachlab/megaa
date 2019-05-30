@@ -71,23 +71,23 @@ for s = 1:length(subs)
     
     
     %% Compute output
-    % --------------------------------------------------------------
-    job{6}.spm.tools.beamforming.output.BF(1) = cfg_dep('Inverse solution: BF.mat file', substruct('.','val', '{}',{5}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','BF'));
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.whatconditions.condlabel = {'eCol_';'eCau_'}';
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.contrast = [1 -1];
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.woi = [0 600];
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.datafeatures = 'sumpower';
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.foi = [1 8];
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.result = 'chi square';
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.sametrials = false;
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.modality = 'MEG';
-    
-    
-    %% Write out results
-    % --------------------------------------------------------------
-    job{7}.spm.tools.beamforming.write.BF(1) = cfg_dep('Output: BF.mat file', substruct('.','val', '{}',{6}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','BF'));
-    job{7}.spm.tools.beamforming.write.plugin.nifti.normalise = 'no';
-    job{7}.spm.tools.beamforming.write.plugin.nifti.space = 'mni';
+%     % --------------------------------------------------------------
+%     job{6}.spm.tools.beamforming.output.BF(1) = cfg_dep('Inverse solution: BF.mat file', substruct('.','val', '{}',{5}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','BF'));
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.whatconditions.condlabel = {'eCol_';'eCau_'}';
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.contrast = [1 -1];
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.woi = [0 600];
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.datafeatures = 'sumpower';
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.foi = [1 8];
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.result = 'chi square';
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.sametrials = false;
+%     job{6}.spm.tools.beamforming.output.plugin.image_mv.modality = 'MEG';
+%     
+%     
+%     %% Write out results
+%     % --------------------------------------------------------------
+%     job{7}.spm.tools.beamforming.write.BF(1) = cfg_dep('Output: BF.mat file', substruct('.','val', '{}',{6}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','BF'));
+%     job{7}.spm.tools.beamforming.write.plugin.nifti.normalise = 'no';
+%     job{7}.spm.tools.beamforming.write.plugin.nifti.space = 'mni';
     
 end
 
