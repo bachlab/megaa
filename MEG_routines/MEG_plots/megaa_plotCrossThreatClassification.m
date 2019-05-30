@@ -20,6 +20,11 @@ par.NumNullEx = 0;
 
 %% Load the files containing the F-values from the lme
 % -------------------------------------------------------------
+
+% Entire dataset
+fValEntireData = load('/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms/TrlSrt/from_R/fVal_realCol.mat');
+
+% Cross-threat classification
 fValAll{1,1} = load([foldersPrefix,'Prob1/TrlSrt/from_R/tVal_realCol_11.mat']);
 fValAll{1,2} = load([foldersPrefix,'Prob1/TrlSrt/from_R/tVal_realCol_12.mat']);
 fValAll{1,3} = load([foldersPrefix,'Prob1/TrlSrt/from_R/tVal_realCol_13.mat']);
@@ -49,41 +54,9 @@ end
 
 % Plot also general one for comparison
 % -------------------------------------------------------------
-
-
-
-%% Plot them
-% -------------------------------------------------------------
-x = 10:10:1500;
-
-% Threat probability
 figure('color',[1 1 1])
-plot(x,accuracyAvg1,'linewidth',2),hold on
-plot(x,accuracyAvg2,'linewidth',2)
-plot(x,accuracyAvg3,'linewidth',2)
-jbfill(x,accuracyAvg1+accuracySem1,accuracyAvg1-accuracySem1,[0,0.4470,0.7410]); hold on
-jbfill(x,accuracyAvg2+accuracySem2,accuracyAvg2-accuracySem2,[0.8500 0.3250 0.0980]); hold on
-jbfill(x,accuracyAvg3+accuracySem3,accuracyAvg3-accuracySem3,[0.9290 0.6940 0.1250]); hold on
-plot(x,0.5*ones(length(x),1),'color',[0.4 0.4 0.4],'linestyle','--','linewidth',1.5)
-legend('Threat prob.: Low','Threat prob.: Med','Threat prob.: High')
-set(gca,'FontSize',14)
-xlabel('Time (ms)'), ylabel('Balanced accuracy')
-ylim([0.48 0.70])
-xlim([0 750])
-
-% Threat magnitude
-figure('color',[1 1 1])
-plot(x,accuracyAvgm0,'linewidth',2,'color',[0.75,0.75,0.75]),hold on
-plot(x,accuracyAvgm1,'linewidth',2,'color',[0.60,0.60,0.60])
-plot(x,accuracyAvgm2,'linewidth',2,'color',[0.45,0.45,0.45])
-plot(x,accuracyAvgm3,'linewidth',2,'color',[0.30,0.30,0.30])
-jbfill(x,accuracyAvgm0+accuracySemm0,accuracyAvgm0-accuracySemm0,[0.75,0.75,0.75]); hold on
-jbfill(x,accuracyAvgm1+accuracySemm1,accuracyAvgm1-accuracySemm1,[0.60,0.60,0.60]); hold on
-jbfill(x,accuracyAvgm2+accuracySemm2,accuracyAvgm2-accuracySemm2,[0.45,0.45,0.45]); hold on
-jbfill(x,accuracyAvgm3+accuracySemm3,accuracyAvgm3-accuracySemm3,[0.30,0.30,0.30]); hold on
-plot(x,0.5*ones(length(x),1),'color',[0.4 0.4 0.4],'linestyle','--','linewidth',1.5)
-legend('Threat magn. = 0','Threat magn. = 1','Threat magn. = 2','Threat magn. = 3')
-set(gca,'FontSize',14)
-xlabel('Time (ms)'), ylabel('Balanced accuracy')
-ylim([0.48 0.70])
-xlim([0 750])
+fValEntireData = smooth(fValEntireData.x(2,:),8);
+rectangle('Position',[400 0.02 130 10],'FaceColor',[0.95 0.95 0.95],'linestyle','--'); hold on
+plot(x,fValEntireData,'linewidth',2,'marker','.','linestyle','none','markersize',10)
+ylim([0 4.5]), xlim([0 1500])
+set(gca,'fontsize',12), ylabel('F-value (threat magn.)'), xlabel('Deliberation time after trial start (ms)')

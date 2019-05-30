@@ -110,8 +110,8 @@ if (permute == 1){
     # select file
     fn <- paste(folder_in,'lmeData/lme_Perm_',toString(p),'.mat',sep = '')
     indata.Perm <- readMat(fn)
-    M.Perm.Cau <- as.data.frame(indata.Perm$R.Perm[[1]])
-    M.Perm.Col <- as.data.frame(indata.Perm$R.Perm[[2]])
+    M.Perm.Cau <- as.data.frame(indata.Perm$lme.Perm[[1]])
+    M.Perm.Col <- as.data.frame(indata.Perm$lme.Perm[[2]])
     
     M.Perm.Cau <- logit(M.Perm.Cau)
     M.Perm.Col <- logit(M.Perm.Col)
@@ -144,9 +144,10 @@ df2 <- length(Y.Cau) - (ncoef[1] + ncoef[2] - 1)
 # save.image()
 # Write data for Matlab
 # -------------------------------------------------------------
+writeMat(con = paste(folder_out,'fVal_realCau.mat',sep = ''), x = F.Real.Cau)
+writeMat(con = paste(folder_out,'fVal_realCol.mat',sep = ''), x = F.Real.Col)
+
 if (permute == 1){
-  writeMat(con = paste(folder_out,'R_out_Real_Cau.mat',sep = ''), x = F.Real.Cau)
-  writeMat(con = paste(folder_out,'R_out_Real_Col.mat',sep = ''), x = F.Real.Col)
   writeMat(con = paste(folder_out,'R_out_Perm_Cau.mat',sep = ''), x = F.Perm.Cau)
   writeMat(con = paste(folder_out,'R_out_Perm_Col.mat',sep = ''), x = F.Perm.Col)
   writeMat(con = paste(folder_out,'R_out_df2.mat',sep = ''), x = df2)

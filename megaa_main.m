@@ -12,8 +12,9 @@ restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 fs = filesep;
 
 addpath('/Users/gcastegnetti/Desktop/tools/matlab/spm12')
-addpath(genpath([pwd,fs,'MEG_rOutines']))
+addpath(genpath([pwd,fs,'MEG_routines']))
 
+spm eeg
 
 %% Analysis parameters
 % -------------------------------------------------------------
@@ -44,11 +45,11 @@ steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 0;
-steps.findLasso = 1;
-steps.createClass = 1;
-steps.classify = 1;
+steps.findLasso = 0;
+steps.createClass = 0;
+steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 0;
+steps.bf = 1;
 
 %% Folders
 % -------------------------------------------------------------
@@ -208,28 +209,7 @@ if ~exist('Out_4','var'), load(file_4,'Out_4'), end
 if ~exist('Out_5','var'), load(file_5,'Out_5'), end
 In = Out_4.PredCont;
 Out_SSreal = MEG_6_SS_avg(par,In,Out_1,conds,[0 1]);
-keyboard
-for s = 1:length(par.subs)
-    MeanReal_Col(s,:) = smooth(Out_SSreal{s}.Col.All); %#ok<SAGROW>
-    MeanReal_Cau(s,:) = smooth(Out_SSreal{s}.Cau.All); %#ok<SAGROW>
-end
-Out_SSperm = cell(par.NumPerm,1);
-for p = 1:par.NumPerm
-    In_perm = Out_4.PredCont_perm(:,p);
-    Out_SSperm{p} = MEG_6_SS_avg(par,In_perm,Out_1,conds,[0 0]);
-    for s = 1:length(par.subs)
-        foo_Col(s,:) = Out_SSperm{p}{s}.Col.All;
-        foo_Cau(s,:) = Out_SSperm{p}{s}.Cau.All;
-    end
-    PermMeans_Col(p,:) = smooth(mean(foo_Col,1)); %#ok<SAGROW>
-    PermMeans_Cau(p,:) = smooth(mean(foo_Cau,1)); %#ok<SAGROW>
-end
-figure('color',[1 1 1])
-subplot(2,1,1),plot(PermMeans_Cau','color',[0 0 0]),hold on,plot(mean(MeanReal_Cau),'color',[0 0 1],'linewidth',2)
-subplot(2,1,2),plot(PermMeans_Col','color',[0 0 0]),hold on,plot(mean(MeanReal_Col),'color',[0 0 1],'linewidth',2)
 
-clear Out_5 Out_6
-MEG_DataClusters(par,Out_SSreal,Out_SSperm)
 
 %% cluster plot and analysis
 MEG_7_PermTest
