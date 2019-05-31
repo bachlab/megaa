@@ -86,7 +86,7 @@ jbfill(xspan,mean(trls.tp3,1) + std(trls.tp1,1)/sqrt(23),...
 plot(xspan,mean(trls.tp1,1),'linewidth',lw,'color',[0,0.4470,0.7410])
 plot(xspan,mean(trls.tp2,1),'linewidth',lw,'color',[0.8500,0.3250,0.0980])
 plot(xspan,mean(trls.tp3,1),'linewidth',lw,'color',[0.9290 0.6940 0.1250])
-% set(gca,'fontsize',14), ylim([0.76 0.86])
+set(gca,'fontsize',14,'xtick',0:300:1500), ylim([0.76 0.86])
 % Magnitude
 % ----------------------------------------------------
 subplot(3,1,2)
@@ -110,7 +110,7 @@ plot(xspan,mean(trls.tm2,1),'linewidth',lw,'color',[0.45,0.45,0.50])
 plot(xspan,mean(trls.tm3,1),'linewidth',lw,'color',[0.30,0.30,0.35])
 plot(xspan,mean(trls.tm4,1),'linewidth',lw,'color',[0.15,0.15,0.20])
 plot(xspan,mean(trls.tm5,1),'linewidth',lw,'color',[0,0,0.05])
-% set(gca,'fontsize',14), ylim([0.76 0.86])
+set(gca,'fontsize',14), ylim([0.76 0.86])
 
 % Choice
 % ----------------------------------------------------
@@ -123,7 +123,7 @@ jbfill(xspan,mean(trls.go,1) + std(trls.go,1)/sqrt(23),...
 
 plot(xspan,mean(trls.stay,1),'linewidth',lw,'color',[0.9,0,0])
 plot(xspan,mean(trls.go,1),'linewidth',lw,'color',[0,0,0.75])
-% set(gca,'fontsize',14), ylim([0.76 0.86])
+set(gca,'fontsize',14,'xtick',0:250:1500), ylim([0.76 0.86])
 
 keyboard
 end

@@ -20,7 +20,7 @@ addpath(genpath([pwd,fs,'MEG_routines']))
 % -------------------------------------------------------------
 par.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
 par.ebCorr = 0;       % Correct eyeblink artefacts?
-par.NumNullEx = 0;    % Number of null examples taken before trial onset.
+par.NumNullEx = 50;    % Number of null examples taken before trial onset.
 par.timeBin = 30;
 par.subs = [1:5 7:9 11:25]; % Subjects
 par.NumRuns = 6;      % Number of experimental runs
@@ -32,7 +32,7 @@ par.whichTpTrain = 100; % Which threat prob. to include for training (100 = all)
 par.whichTmTrain = 100; % Which threat magn. to include for training (100 = all)
 
 % Select whether to align to token appearance (1) or trial start (2)
-par.align = 1;
+par.align = 2;
 if par.align == 1
     par.deliberTime = 300;
 elseif par.align == 2
@@ -47,7 +47,7 @@ steps.findChan = 0;
 steps.findBin = 0;
 steps.findLasso = 0;
 steps.createClass = 0;
-steps.classify = 1;
+steps.classify = 0;
 steps.autocorr = 0;
 steps.bf = 0;
 
@@ -147,7 +147,7 @@ if steps.createClass
     if par.NumNullEx == 0
         Out_3 = megaa_createClassifier(par,Out_1,Out_2);
     else
-        Out_3 = MEG_3_CreClaVsBase(set_par,Out_1,Out_2);
+        Out_3 = megaa_createClassifierBase(par,Out_1,Out_2);
     end
     save(file_3,'Out_3','-v7.3')
 end, clear Out_2
