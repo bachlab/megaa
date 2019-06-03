@@ -1,5 +1,5 @@
 function out = megaa_optimiseLambda(par,In)
-% finds the time point of maximal accuracy for every classifier, then 
+% finds the time point of maximal accuracy for every classifier, then
 % optimises lasso coefficient at this time
 % G Castegnetti 2017
 
@@ -53,14 +53,30 @@ parfor s = 1:length(subs)
     % Prepare training data
     xReal = squeeze(In{s}.d_Real(:,optBin,In{s}.Design(:,1)))';    % sensor data at the outcome - Cau
     xBase = In{s}.d_Base;                                          % sensor data at the baseline
-    yCau = [In{s}.Design(:,2); zeros(numNullEx,1)];        % outcomes if Cau are positive examples
-    yCol = [1-In{s}.Design(:,2); zeros(numNullEx,1)];      % outcomes if Col are positive examples
+    yCau = In{s}.Design(:,2);        % outcomes if Cau are positive examples
+    yCol = 1-In{s}.Design(:,2);      % outcomes if Col are positive examples
+    x = [xReal; xBase];
+    xCau = x;
+    xCol = x;
+    
+    if numNullEx > 0
+        idx_exclude_Cau = yCau == 0;
+        yCau(idx_exclude_Cau) = [];
+        xCau(idx_exclude_Cau,:) = [];
+        yCau = [yCau; zeros(numNullEx,1)];
+        
+        idx_exclude_Col = yCol == 0;
+        yCol(idx_exclude_Col) = [];
+        xCol(idx_exclude_Col,:) = [];
+        yCol = [yCol; zeros(numNullEx,1)];
+    end
+    
     x = [xReal; xBase];
     
     % Cross-validated accuracy with each lambda
-    [cau{s}.Coeff,cau{s}.FitInfo] = lassoglm(x,yCau,'binomial','Alpha',1,'lambda',lasso,'CV',10); % regression with Cau positive examples
-    [col{s}.Coeff,col{s}.FitInfo] = lassoglm(x,yCol,'binomial','Alpha',1,'lambda',lasso,'CV',10); % regression with Col positive examples
-
+    [cau{s}.Coeff,cau{s}.FitInfo] = lassoglm(xCau,yCau,'binomial','Alpha',1,'lambda',lasso,'CV',10); % regression with Cau positive examples
+    [col{s}.Coeff,col{s}.FitInfo] = lassoglm(xCol,yCol,'binomial','Alpha',1,'lambda',lasso,'CV',10); % regression with Col positive examples
+    
 end
 
 %% Find optimal subjective lambda coefficient

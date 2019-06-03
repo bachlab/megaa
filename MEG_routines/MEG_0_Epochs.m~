@@ -9,7 +9,7 @@ NumRuns = 6;
 subs = set_par.subs;
 
 % length of different epochs of interests
-L_epoch_Out = 1.1;
+L_epoch_Out = 1;
 L_epoch_Bas = 2;
 L_epoch_Trl = 2;
 L_epoch_Tok = 0.5;
@@ -139,7 +139,6 @@ for s = 1:length(subs)
         % ------------------------------------------------------
         % Distinguish outcome type
         i = 1;
-        outcomes = [];
         outcomeOnsets = [];
         idx = false(108,1);
         for j = (108*(r-2)+1):(108*(r-1))
@@ -164,11 +163,11 @@ for s = 1:length(subs)
         
         epochStart = round(sr*(Triggers(idx) + 0.001*outcomeOnsets'));
         epochEnd = epochStart + sr*L_epoch_Out;
-        S.trl = [epochStart,epochEnd,-100+zeros(length(epochStart),1)];
+        S.trl = [epochStart,epochEnd,100+zeros(length(epochStart),1)];
         S.bc = 1;
         S.prefix = 'eOut_';
         spm_eeg_epochs(S);
-        clear S
+        
         
     end
 end

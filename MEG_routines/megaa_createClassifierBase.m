@@ -19,11 +19,19 @@ for s = 1:length(subs)
     x_Base = in_1{s}.d_Base;                                         % sensor data at the baseline
     
     x = [x_Real; x_Base];
+    x_Cau = x;
+    x_Col = x;
     
     y_Cau_foo = design(:,2);
-    y_Cau_foo(y_Cau_foo == 0) = nan;
+    idx_exclude_Cau = y_Cau_foo == 0;
+    y_Cau_foo(idx_exclude_Cau) = [];
+    x_Cau(idx_exclude_Cau,:) = [];
+    
     y_Col_foo = 1-design(:,2);
-    y_Col_foo(y_Col_foo == 0) = nan;
+    idx_exclude_Col = y_Col_foo == 0;
+    y_Col_foo(idx_exclude_Col) = [];
+    x_Col(idx_exclude_Col,:) = [];
+
     
     y_Cau = [y_Cau_foo; zeros(set_par.NumNullEx,1)];
     y_Col = [y_Col_foo; zeros(set_par.NumNullEx,1)];
@@ -33,14 +41,12 @@ for s = 1:length(subs)
     if numPerm > 0
         for p = 1:numPerm
             disp(['sub#',num2str(subs(s)),'; permutation ' int2str(p) ' of ' int2str(numPerm) '...']); % update user
+                         
+            y_Perm_Cau = y_Cau(randperm(numel(y_Cau)));
+            y_Perm_Col = y_Col(randperm(numel(y_Col)));
             
-            foo = randperm(length(design)+set_par.NumNullEx);
-             
-            y_Perm_Cau = y_Cau(foo);
-            y_Perm_Col = y_Col(foo);
-            
-            [out.PermClass{s,p}.Cau,out.PermFitInfo{s,p}.Cau] = lassoglm(x,y_Perm_Cau,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Cau(s)); % regression with Cau are positive examples
-            [out.PermClass{s,p}.Col,out.PermFitInfo{s,p}.Col] = lassoglm(x,y_Perm_Col,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Col(s)); % regression with Col are positive examples
+            [out.PermClass{s,p}.Cau,out.PermFitInfo{s,p}.Cau] = lassoglm(x_Cau,y_Perm_Cau,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Cau(s)); % regression with Cau are positive examples
+            [out.PermClass{s,p}.Col,out.PermFitInfo{s,p}.Col] = lassoglm(x_Col,y_Perm_Col,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Col(s)); % regression with Col are positive examples
             [out.PermClass{s,p}.Bas] = zeros(set_par.NumSens,1);
         end
     end
@@ -48,8 +54,8 @@ for s = 1:length(subs)
     %% correct labels
     % ------------------------------------------------------
     
-    [out.OptClass{s}.Cau,out.OptFitInfo{s}.Cau] = lassoglm(x,y_Cau,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Cau(s)); % regression with Cau are positive examples
-    [out.OptClass{s}.Col,out.OptFitInfo{s}.Col] = lassoglm(x,y_Col,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Col(s)); % regression with Col are positive examples
+    [out.OptClass{s}.Cau,out.OptFitInfo{s}.Cau] = lassoglm(x_Cau,y_Cau,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Cau(s)); % regression with Cau are positive examples
+    [out.OptClass{s}.Col,out.OptFitInfo{s}.Col] = lassoglm(x_Col,y_Col,'binomial','Alpha',1,'Lambda',in_2.OptLasso_Col(s)); % regression with Col are positive examples
     [out.OptClass{s}.Bas] = zeros(set_par.NumSens,1);
     
     clear t_Null RandOnsets_Null X_Real X_Base X Y_Cau Y_Col Y_Bas

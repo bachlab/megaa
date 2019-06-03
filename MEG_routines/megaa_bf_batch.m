@@ -10,7 +10,10 @@ for s = 1:length(subs)
     
     subFolder = ['/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/imported/MEG_sub_',num2str(subs(s))];
     
-    data_dir = [subFolder,filesep,'dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.mat'];
+    data = spm_select('List', subFolder, '^f.*\.nii$');
+%             files = cellstr([repmat([dirFun fs],size(d,1),1) d]);
+    
+    
     bf_dir = [subFolder,filesep,'bf'];
     if ~exist(bf_dir,'dir'), mkdir(bf_dir), end
     
