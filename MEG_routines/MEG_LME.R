@@ -148,9 +148,9 @@ writeMat(con = paste(folder_out,'fVal_realCau.mat',sep = ''), x = F.Real.Cau)
 writeMat(con = paste(folder_out,'fVal_realCol.mat',sep = ''), x = F.Real.Col)
 
 if (permute == 1){
-  writeMat(con = paste(folder_out,'R_out_Perm_Cau.mat',sep = ''), x = F.Perm.Cau)
-  writeMat(con = paste(folder_out,'R_out_Perm_Col.mat',sep = ''), x = F.Perm.Col)
-  writeMat(con = paste(folder_out,'R_out_df2.mat',sep = ''), x = df2)
+  writeMat(con = paste(folder_out,'fVal_permCau.mat',sep = ''), x = F.Perm.Cau)
+  writeMat(con = paste(folder_out,'fVal_permCol.mat',sep = ''), x = F.Perm.Col)
+  writeMat(con = paste(folder_out,'outR_df2.mat',sep = ''), x = df2)
 }
 
 # Plot main effects

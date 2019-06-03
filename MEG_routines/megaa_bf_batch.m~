@@ -11,7 +11,7 @@ for s = 1:length(subs)
     subFolder = ['/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/imported/MEG_sub_',num2str(subs(s))];
     
     data = spm_select('List', subFolder, '^ceOut.*\.mat$');
-    files = cellstr([repmat([subFolder filesep],size(data,1),1) data]);
+    %             files = cellstr([repmat([dirFun fs],size(d,1),1) d]);
     
     
     bf_dir = [subFolder,filesep,'bf'];
@@ -20,7 +20,7 @@ for s = 1:length(subs)
     
     %% Prepare input data
     % --------------------------------------------------------------
-    job{1}.spm.meeg.source.headmodel.D = files;
+    job{1}.spm.meeg.source.headmodel.D = {data};
     job{1}.spm.meeg.source.headmodel.val = 1;
     job{1}.spm.meeg.source.headmodel.comment = '';
     job{1}.spm.meeg.source.headmodel.meshing.meshes.template = 1;
@@ -98,6 +98,5 @@ for s = 1:length(subs)
     spm('defaults', 'EEG');
     spm_jobman('run', job);
     
-end
 
 

@@ -1,0 +1,7 @@
+for s = 1:length(subs)
+
+
+spm_eeg_merge(S)
+
+
+en

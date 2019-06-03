@@ -42,14 +42,14 @@ end
 % Select which steps to run
 steps.preprocess = 0;
 steps.corrEye = 0;
-steps.cutEpoch = 1;
+steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 0;
 steps.findLasso = 0;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 0;
+steps.bf = 1;
 
 %% Folders
 % -------------------------------------------------------------
