@@ -8,7 +8,7 @@ restoredefaultpath
 % addpath D:\MATLAB\MATLAB_scripts\MEG\MEG_STEPs_outputs\ECGLO135\MEG_OUT_B50\From_R
 restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 addpath(genpath([pwd,filesep,'MEG_routines']))
-addpath /Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B50_Col_300ms/TrlSrt/From_R
+addpath /Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B100_Col_300ms/TrlSrt/From_R
 
 %% Load F-values from lme in R
 % --------------------------------------------

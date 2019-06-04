@@ -14,7 +14,7 @@ Sys.setenv(LANG = "en")
 
 # specify folders
 # -------------------------------------------------------------
-folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B100_Col_300ms/TrlSrt/'
+folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B100_Col_300ms/TokApp/'
 folder_out <- paste(folder_in,'From_R/',sep = '')
 dir.create(folder_out, showWarnings = TRUE, recursive = FALSE, mode = "0777")
 
@@ -48,7 +48,7 @@ GO   <- M.Cond[ ,6] # approach - fixed factor
 PREV <- M.Cond[ ,7] # previous outcome - fixed factor
 
 # Number of time points to consider (change if aligned to token appearance)
-MinDur <- 150
+MinDur <- 30
 
 # remove NaNs
 indx <- which(is.nan(GO))
