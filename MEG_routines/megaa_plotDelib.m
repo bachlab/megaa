@@ -125,5 +125,4 @@ plot(xspan,mean(trls.stay,1),'linewidth',lw,'color',[0.9,0,0])
 plot(xspan,mean(trls.go,1),'linewidth',lw,'color',[0,0,0.75])
 set(gca,'fontsize',14,'xtick',0:250:1500), %ylim([0.76 0.86])
 
-keyboard
 end

@@ -1,26 +1,26 @@
 %% Script to compute and plot the results of cluster analysis
 
 clear
-% close all
+close all
 
 ProbClus = 0.95;
 restoredefaultpath
 % addpath D:\MATLAB\MATLAB_scripts\MEG\MEG_STEPs_outputs\ECGLO135\MEG_OUT_B50\From_R
 restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 addpath(genpath([pwd,filesep,'MEG_routines']))
-addpath /Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_300ms/TrlSrt/From_R
+addpath /Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B50_Col_300ms/TrlSrt/From_R
 
 %% Load F-values from lme in R
 % --------------------------------------------
-load('fVal_realCol')
+load('fVal_realCol.mat')
 f_realCol = x;
-load('fVal_realCau')
+load('fVal_realCau.mat')
 f_realCau = x;
-load('fVal_permCol')
+load('fVal_permCol.mat')
 f_permCol = x;
-load('fVal_permCau')
+load('fVal_permCau.mat')
 f_permCau = x;
-load('R_out_df2')
+load('outR_df2.mat')
 df2 = x;
 xend = round(10*size(f_realCol,2));
 xspan = 10:10:xend;
@@ -88,7 +88,6 @@ signClusters.Col.GO = pcluster.Col.GO > 0.95;
 
 
 %% plot Cau
-
 h3 = figure('color',[1 1 1]);
 subplot(3,2,1)
 plot(xspan,f_realCol(1,:),'color','b','linestyle','none','marker','.','markersize',15),hold on

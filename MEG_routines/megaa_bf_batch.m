@@ -8,13 +8,16 @@ subs = [1:5 7:9 11:25];
 
 for s = 1:length(subs)
     
+    % Update user
+    disp(['Computing source localisation for sub#',num2str(subs(s))])
+    
     subFolder = ['/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/imported/MEG_sub_',num2str(subs(s))];
     
     data = spm_select('List', subFolder, '^ceOut.*\.mat$');
     files = cellstr([repmat([subFolder filesep],size(data,1),1) data]);
     
     
-    bf_dir = [subFolder,filesep,'bf'];
+    bf_dir = [subFolder,filesep,'bf_gamma'];
     if ~exist(bf_dir,'dir'), mkdir(bf_dir), end
     
     

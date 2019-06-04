@@ -14,21 +14,20 @@ fs = filesep;
 addpath('/Users/gcastegnetti/Desktop/tools/matlab/spm12')
 addpath(genpath([pwd,fs,'MEG_routines']))
 
-spm eeg
+% spm eeg
 
 %% Analysis parameters
 % -------------------------------------------------------------
 par.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
 par.ebCorr = 0;       % Correct eyeblink artefacts?
-par.NumNullEx = 50;    % Number of null examples taken before trial onset.
+par.NumNullEx = 0;  % Number of null examples taken before trial onset.
 par.timeBin = 30;
 par.subs = [1:5 7:9 11:25]; % Subjects
 par.NumRuns = 6;      % Number of experimental runs
 par.NumTrials = 540;  % Number of trials per subject
 par.NumPerm = 100;    % Number of permutations for statistical testing
 par.NumTrainBins = 100; % Number of (10ms) time bins to consider after Outcome presentation to define training set
-par.NullOnset = 50;   % Where to take data for null examples
-par.whichTpTrain = 100; % Which threat prob. to include for training (100 = all)
+par.whichTpTrain = 1; % Which threat prob. to include for training (100 = all)
 par.whichTmTrain = 100; % Which threat magn. to include for training (100 = all)
 
 % Select whether to align to token appearance (1) or trial start (2)
@@ -42,13 +41,13 @@ end
 % Select which steps to run
 steps.preprocess = 0;
 steps.corrEye = 0;
-steps.cutEpoch = 1;
+steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 0;
 steps.findLasso = 0;
 steps.createClass = 0;
 steps.classify = 0;
-steps.autocorr = 0;
+steps.autocorr = 1;
 steps.bf = 0;
 
 %% Folders
@@ -200,7 +199,6 @@ megaa_plotDelib(par,Out_4,conds);
 % -------------------------------------------------------------
 if steps.autocorr
     if ~exist('Out_4','var'), load(file_4,'Out_4'), end
-    if ~exist('Out_5','var'), load(file_5,'Out_5'), end
     Out_AutoC = MEG_autocorr(par,Out_4,conds);
     MEG_PermTest_AutoC(par,Out_AutoC);
 end
