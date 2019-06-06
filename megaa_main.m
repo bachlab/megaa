@@ -6,7 +6,7 @@
 % GX Castegnetti --- start 08/2016 --- last update 05/2019
 
 clear
-% close all
+close all
 
 restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 fs = filesep;
@@ -48,7 +48,7 @@ steps.findLasso = 0;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 0;
+steps.bf = 1;
 
 %% Folders
 % -------------------------------------------------------------

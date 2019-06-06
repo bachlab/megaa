@@ -17,7 +17,7 @@ for s = 1:length(subs)
     files = cellstr([repmat([subFolder filesep],size(data,1),1) data]);
     
     
-    bf_dir = [subFolder,filesep,'bf_gamma'];
+    bf_dir = [subFolder,filesep,'bf_1-49'];
     if ~exist(bf_dir,'dir'), mkdir(bf_dir), end
     
     
@@ -63,7 +63,7 @@ for s = 1:length(subs)
     job{4}.spm.tools.beamforming.features.woi = [0 600];
     job{4}.spm.tools.beamforming.features.modality = {'MEG'};
     job{4}.spm.tools.beamforming.features.fuse = 'no';
-    job{4}.spm.tools.beamforming.features.plugin.cov.foi = [1 8];
+    job{4}.spm.tools.beamforming.features.plugin.cov.foi = [1 49];
     job{4}.spm.tools.beamforming.features.plugin.cov.taper = 'hanning';
     job{4}.spm.tools.beamforming.features.regularisation.minkatrunc.reduce = 1;
     job{4}.spm.tools.beamforming.features.bootstrap = false;
@@ -83,7 +83,7 @@ for s = 1:length(subs)
     job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.contrast = [1 -1];
     job{6}.spm.tools.beamforming.output.plugin.image_mv.isdesign.custom.woi = [0 600];
     job{6}.spm.tools.beamforming.output.plugin.image_mv.datafeatures = 'sumpower';
-    job{6}.spm.tools.beamforming.output.plugin.image_mv.foi = [1 8];
+    job{6}.spm.tools.beamforming.output.plugin.image_mv.foi = [1 49];
     job{6}.spm.tools.beamforming.output.plugin.image_mv.result = 'chi square';
     job{6}.spm.tools.beamforming.output.plugin.image_mv.sametrials = false;
     job{6}.spm.tools.beamforming.output.plugin.image_mv.modality = 'MEG';
