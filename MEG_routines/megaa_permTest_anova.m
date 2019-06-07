@@ -2,9 +2,10 @@
 
 clear
 close all
+restoredefaultpath
 
 ProbClus = 0.95;
-restoredefaultpath
+
 % addpath D:\MATLAB\MATLAB_scripts\MEG\MEG_STEPs_outputs\ECGLO135\MEG_OUT_B50\From_R
 restoredefaultpath, clear RESTOREDEFAULTPATH_EXECUTED
 addpath(genpath([pwd,filesep,'MEG_routines']))

@@ -47,7 +47,7 @@ for s = 1:length(par.subs)
     for trl = 1:n_trials
         iti(trl) = game(trl).laststate.waitbreak;
         threatProb(trl) = game(trl).laststate.predno;
-        threatMagn(trl) = game(trl).laststate.tokenloss;        
+        threatMagn(trl) = game(trl).laststate.tokenloss;
     end, clear trl
     
     
@@ -56,7 +56,7 @@ for s = 1:length(par.subs)
     % If training restricted to one threat level or potential loss, select
     % relevant trials now.
     
-    % If we want to consider all threat probabilities and/or magnitudes 
+    % If we want to consider all threat probabilities and/or magnitudes
     % (i.e. par = 100), set a condition that is always true.
     if whichTp == 100
         threatProb = 100*ones(length(behMat),1);
@@ -72,7 +72,37 @@ for s = 1:length(par.subs)
         trials_Col(j) = ~isempty(find(game(j).posmat(:,7),1)) && game(j).tokenrecord == 1 && threatProb(j) == whichTp && threatMagn(j) == whichTm;
         trials_Cau(j) = ~isempty(find(game(j).posmat(:,3) + game(j).posmat(:,4) == 3 ,1)) && threatProb(j) == whichTp && threatMagn(j) == whichTm;
     end
-    clear game j
+    clear j
+    
+    % Balance the training to the smallest probability-specific sample
+    rng(29)
+    if true
+        for tl = 1:3
+            for k = 1:n_trials
+                
+                % Find how many samples are available for each threat probability
+                foo1(k) = sum(~isempty(find(game(k).posmat(:,7),1)) && game(k).tokenrecord == 1 && threatProb(k) == tl);
+                foo2(k) = sum(~isempty(find(game(k).posmat(:,3) + game(k).posmat(:,4) == 3 ,1)) && threatProb(k) == tl);
+            end
+            sampleCount(tl,1) = sum(foo1);
+            sampleCount(tl,2) = sum(foo2);
+        end
+        percSamples = sum(sampleCount,2);
+        minSamples = min(percSamples);
+        percDiff = (sampleCount(whichTp) - minSamples)/sampleCount(whichTp);
+        if percDiff ~= 0
+            idxCol = find(trials_Col);
+            idxCau = find(trials_Cau);
+            foo1 = idxCol(randperm(numel(idxCol)));
+            foo2 = idxCau(randperm(numel(idxCau)));
+            foo1 = foo1(1:round(percDiff*numel(idxCol)));
+            foo2 = foo2(1:round(percDiff*numel(idxCau)));
+            trials_Col(foo1) = [];
+            trials_Cau(foo2) = [];
+            
+        end
+    end
+    clear game k foo1 foo2 sampleCount percSamples minSamples percDiff
     
     
     %% Create matrices containing the field at the sensors
@@ -139,7 +169,7 @@ for s = 1:length(par.subs)
     clear idx trl_rem
     
     %% Train classifier
-    % -------------------------------------------------------------    
+    % -------------------------------------------------------------
     
     % Class labels
     y_Cau = [design(:,2); zeros(num_NullEx,1)]; % outcomes if Cau are positive examples
@@ -179,7 +209,6 @@ for s = 1:length(par.subs)
             
             y_Cau_red = y_Cau; y_Cau_red(testSet) = []; % Cau outcomes
             y_Col_red = y_Col; y_Col_red(testSet) = []; % Col outcomes
-            y_Bas_red = y_Bas; y_Bas_red(testSet) = []; % Bas outcomes
             
             [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Cau positive examples
             [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Col positive examples

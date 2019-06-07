@@ -22,9 +22,9 @@ par.NumNullEx = 0;
 
 %% Load the three files corresponding to all probs and magns
 % -------------------------------------------------------------
-out1 = load([foldersPrefix,'Prob1/Out_S1_OptBin.mat']);
-out2 = load([foldersPrefix,'Prob2/Out_S1_OptBin.mat']);
-out3 = load([foldersPrefix,'Prob3/Out_S1_OptBin.mat']);
+out1 = load([foldersPrefix,'Prob1/Out_S1_OptBin_Balanced.mat']);
+out2 = load([foldersPrefix,'Prob2/Out_S1_OptBin_Balanced.mat']);
+out3 = load([foldersPrefix,'Prob3/Out_S1_OptBin_Balanced.mat']);
 outm0 = load([foldersPrefix,'Magn0/Out_S1_OptBin.mat']);
 outm1 = load([foldersPrefix,'Magn1/Out_S1_OptBin.mat']);
 outm2 = load([foldersPrefix,'Magn2/Out_S1_OptBin.mat']);

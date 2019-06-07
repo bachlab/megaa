@@ -20,7 +20,7 @@ addpath(genpath([pwd,fs,'MEG_routines']))
 % -------------------------------------------------------------
 par.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
 par.ebCorr = 0;       % Correct eyeblink artefacts?
-par.NumNullEx = 100;  % Number of null examples taken before trial onset.
+par.NumNullEx = 0;  % Number of null examples taken before trial onset.
 par.timeBin = 30;
 par.subs = [1:5 7:9 11:25]; % Subjects
 par.NumRuns = 6;      % Number of experimental runs
@@ -44,11 +44,11 @@ steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 0;
-steps.findLasso = 0;
+steps.findLasso = 1;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 1;
+steps.bf = 0;
 
 %% Folders
 % -------------------------------------------------------------
@@ -117,7 +117,7 @@ end
 
 %% Find time bin (after outcome presentation) for training data
 % -------------------------------------------------------------
-file_1 = fullfile(OutFolder,'Out_S1_OptBin');
+file_1 = fullfile(OutFolder,'Out_S1_OptBin'); % <----------------------------------------------------------I changed this
 if steps.findBin
     if ~exist('Out_0','var'), load(file_0,'Out_0'), end
     Out_1 = megaa_cvPerformance(par,folders,Out_0);
