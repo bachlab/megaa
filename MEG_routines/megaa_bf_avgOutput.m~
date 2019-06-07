@@ -33,7 +33,6 @@ chiMapMetadata.fname = [folder,filesep,'chiMapAvg.nii'];
 
 % Create t-map
 % --------------------------------------------------
-tMap = zeros(size(chiMap,1),size(chiMap,2),size(chiMap,3));
 for x = 1:size(chiMap,1)
     disp(['x = ',num2str(x)])
     for y = 1:size(chiMap,2)
@@ -41,12 +40,14 @@ for x = 1:size(chiMap,1)
             if ~isnan(sum(chiMap(x,y,z,:)))
                 [~,~,~,stats] = ttest(squeeze(chiMap(x,y,z,:)));
                 tMap(x,y,z) = stats.tstat;
+            else
+                tMap = 0;
             end
         end
     end
 end
 
 tMapMetadata = spm_vol(chiMapFile);
-tMapMetadata.fname = [folder,filesep,'tMap.nii'];
-tMapMetadata.descrip =  'R-map';
-spm_write_vol(tMapMetadata, tMap);
+chiMapMetadata.fname = [folder,filesep,'tMap.nii'];
+rMapMetadataStruct_nS.descrip =  'R-map';
+spm_write_vol(tMapMetadata, nanmean(chiMap,4));
