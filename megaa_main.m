@@ -14,7 +14,7 @@ fs = filesep;
 addpath('/Users/gcastegnetti/Desktop/tools/matlab/spm12')
 addpath(genpath([pwd,fs,'MEG_routines']))
 
-% spm eeg
+spm eeg
 
 %% Analysis parameters
 % -------------------------------------------------------------
@@ -44,11 +44,11 @@ steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 0;
-steps.findLasso = 1;
+steps.findLasso = 0;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 0;
+steps.bf = 1;
 
 %% Folders
 % -------------------------------------------------------------
