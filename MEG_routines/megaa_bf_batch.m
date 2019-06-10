@@ -17,7 +17,7 @@ for s = 1:length(subs)
     files = cellstr([repmat([subFolder filesep],size(data,1),1) data]);
     
     
-    bf_dir = [subFolder,filesep,'bf_1-49_pow'];
+    bf_dir = [subFolder,filesep,'bf_1-49_powCond2'];
     if ~exist(bf_dir,'dir'), mkdir(bf_dir), end
     
     
@@ -91,10 +91,10 @@ for s = 1:length(subs)
     job{6}.spm.tools.beamforming.output.plugin.image_power.whatconditions.condlabel = {'Col';'Cau'}';
     job{6}.spm.tools.beamforming.output.plugin.image_power.sametrials = false;
     job{6}.spm.tools.beamforming.output.plugin.image_power.woi = [0 600];
-    job{6}.spm.tools.beamforming.output.plugin.image_power.foi = [0 49];
+    job{6}.spm.tools.beamforming.output.plugin.image_power.foi = [1 49];
     job{6}.spm.tools.beamforming.output.plugin.image_power.contrast = 1;
     job{6}.spm.tools.beamforming.output.plugin.image_power.logpower = false;
-    job{6}.spm.tools.beamforming.output.plugin.image_power.result = 'singleimage';
+    job{6}.spm.tools.beamforming.output.plugin.image_power.result = 'bycondition';
     job{6}.spm.tools.beamforming.output.plugin.image_power.scale = 1;
     job{6}.spm.tools.beamforming.output.plugin.image_power.powermethod = 'trace';
     job{6}.spm.tools.beamforming.output.plugin.image_power.modality = 'MEG';
