@@ -18,15 +18,14 @@ for p = 1:NumPerm
     autocorr_perm(p,:) = mean(foo2,1);
 end
 
-%%
 percentile05 = prctile(autocorr_perm,5,1);
 percentile95 = prctile(autocorr_perm,95,1);
 
-% permutation test Col
-NLLstat_Col = y_Col_real_NLL;
-NLLstatperm_Col = y_Col_perm_NLL;
-AutoC_Clu_Col = permtest(autocorr_real, autocorr_perm, 0.95);
-AutoC_SignClu_Col = AutoC_Clu_Col > 0.95;
+% % permutation test Col
+% NLLstat_Col = y_Col_real_NLL;
+% NLLstatperm_Col = y_Col_perm_NLL;
+% AutoC_Clu_Col = permtest(autocorr_real, autocorr_perm, 0.95);
+% AutoC_SignClu_Col = AutoC_Clu_Col > 0.95;
 
 %% compute percentiles for display
 
@@ -37,7 +36,7 @@ xf = 4;
 figure('color',[1 1 1])
 plot(xspan(xf:end),autocorr_real(xf:end),'color','b','linewidth',2),hold on
 
-jbfill(xspan(xf:end),LMM_Perm.Int.Col.p95(xf:end),LMM_Perm.Int.Col.p05(xf:end),'b','w'), hold on
+jbfill(xspan(xf:end),percentile95(xf:end),percentile05(xf:end),'b','w'), hold on
 plot(xspan(xf:end),zeros(numel(xspan(xf:end)),1),'color','k','linewidth',2,'linestyle','--')
 xlabel('Lag (ms)'), ylabel('Autocorrelation')
 ylim([-0.05 0.3]),xlim([30 300])
