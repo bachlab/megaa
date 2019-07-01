@@ -14,13 +14,13 @@ fs = filesep;
 addpath('/Users/gcastegnetti/Desktop/tools/matlab/spm12')
 addpath(genpath([pwd,fs,'MEG_routines']))
 
-% spm eeg
+spm eeg
 
 %% Analysis parameters
 % -------------------------------------------------------------
 par.NumSens = 135;    % How many sensors (with fewest eyeblink artefacts) to retain
 par.ebCorr = 0;       % Correct eyeblink artefacts?
-par.NumNullEx = 100;  % Number of null examples taken before trial onset.
+par.NumNullEx = 0;  % Number of null examples taken before trial onset.
 par.timeBin = 30;
 par.subs = [1:5 7:9 11:25]; % Subjects
 par.NumRuns = 6;      % Number of experimental runs
@@ -48,7 +48,7 @@ steps.findLasso = 0;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
-steps.bf = 0;
+steps.bf = 1;
 
 %% Folders
 % -------------------------------------------------------------

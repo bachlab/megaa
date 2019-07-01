@@ -17,7 +17,7 @@ for s = 1:length(subs)
     files = cellstr([repmat([subFolder filesep],size(data,1),1) data]);
     
     
-    bf_dir = [subFolder,filesep,'bf_1-8_powCond'];
+    bf_dir = [subFolder,filesep,'bf_0-50_powCond'];
     if ~exist(bf_dir,'dir'), mkdir(bf_dir), end
     
     
@@ -63,7 +63,7 @@ for s = 1:length(subs)
     job{4}.spm.tools.beamforming.features.woi = [0 600];
     job{4}.spm.tools.beamforming.features.modality = {'MEG'};
     job{4}.spm.tools.beamforming.features.fuse = 'no';
-    job{4}.spm.tools.beamforming.features.plugin.cov.foi = [1 8];
+    job{4}.spm.tools.beamforming.features.plugin.cov.foi = [0 50];
     job{4}.spm.tools.beamforming.features.plugin.cov.taper = 'hanning';
     job{4}.spm.tools.beamforming.features.regularisation.minkatrunc.reduce = 1;
     job{4}.spm.tools.beamforming.features.bootstrap = false;
@@ -91,7 +91,7 @@ for s = 1:length(subs)
     job{6}.spm.tools.beamforming.output.plugin.image_power.whatconditions.condlabel = {'Col';'Cau'}';
     job{6}.spm.tools.beamforming.output.plugin.image_power.sametrials = false;
     job{6}.spm.tools.beamforming.output.plugin.image_power.woi = [0 600];
-    job{6}.spm.tools.beamforming.output.plugin.image_power.foi = [1 8];
+    job{6}.spm.tools.beamforming.output.plugin.image_power.foi = [0 50];
     job{6}.spm.tools.beamforming.output.plugin.image_power.contrast = 1;
     job{6}.spm.tools.beamforming.output.plugin.image_power.logpower = false;
     job{6}.spm.tools.beamforming.output.plugin.image_power.result = 'bycondition';

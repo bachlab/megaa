@@ -23,6 +23,9 @@ out = cell(length(par.subs),1);
 
 %% Loop over subjects
 % -------------------------------------------------------------
+% These are the optimal lasso coefficients. Decomment them (and 
+% change the lines with the regression) to calculate the accuracy with them.
+% optLasso = [0.0055;0.0055;0.0565;0.0080;0.0025;0.0045;0.0115;0.0035;0.0175;0.0040;0.0055;0.0055;0.0035;0.0060;0.0060;0.0155;0.0110;0.0055;0.0060;0.0045;0.0050;0.0055;0.0045];
 for s = 1:length(par.subs)
     
     %% adjust behavioural matrix
@@ -76,7 +79,7 @@ for s = 1:length(par.subs)
     
     % Balance the training to the smallest probability-specific sample
     rng(29)
-    if true
+    if false
         for tl = 1:3
             for k = 1:n_trials
                 
