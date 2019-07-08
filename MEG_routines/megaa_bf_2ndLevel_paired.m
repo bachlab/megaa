@@ -2,11 +2,11 @@ subs = [1:5 7:9 11:25]; % Subjects
 
 job{1}.spm.stats.factorial_design.dir = {'/Users/gcastegnetti/Desktop/stds/MEGAA/analysis'};
 
-folder = '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/bf/freq_1-8';
+folder = '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/bf/pow_1-50_210-410ms';
 
 for s = 1:numel(subs)
-    fileCol = [folder,'_Col/uv_pow_cond_Col_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
-    fileCau = [folder,'_Cau/uv_pow_cond_Cau_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
+    fileCol = [folder,'_P/uv_pow_cond_Col_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
+    fileCau = [folder,'_N/uv_pow_cond_Cau_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
     job{1}.spm.stats.factorial_design.des.pt.pair(s).scans = {fileCol; fileCau};
 end
 

@@ -197,7 +197,7 @@ megaa_fourierTransf(par,Out_4,conds)
 
 %% Behaviour <------- make this code nicer
 % -------------------------------------------------------------
-% MEG_Behaviour(par,folders);
+% megaa_behaviour(par,folders);
 
 
 %% Autocorrelation

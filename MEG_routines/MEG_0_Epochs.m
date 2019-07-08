@@ -164,8 +164,8 @@ for s = 1:length(subs)
         
         epochStart = round(sr*(Triggers(idx) + 0.001*outcomeOnsets')) - 10;
         epochEnd = epochStart + sr*L_epoch_Out + 10;
-        S.trl = [epochStart, epochEnd, -10+zeros(length(epochStart),1)];
-        S.bc = 1;
+        S.trl = [epochStart, epochEnd, zeros(length(epochStart),1)];
+        S.bc = 0;
         S.prefix = 'eOut_';
         spm_eeg_epochs(S);
         clear S

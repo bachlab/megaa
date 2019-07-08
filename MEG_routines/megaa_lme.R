@@ -14,7 +14,7 @@ Sys.setenv(LANG = "en")
 
 # specify folders
 # -------------------------------------------------------------
-folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B0_Col_170ms/TrlSrt/'
+folder_in <- '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_out/E0S135B100_Col_300ms/TrlSrt/'
 folder_out <- paste(folder_in,'From_R/',sep = '')
 dir.create(folder_out, showWarnings = TRUE, recursive = FALSE, mode = "0777")
 

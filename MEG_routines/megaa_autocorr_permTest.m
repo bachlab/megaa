@@ -18,8 +18,8 @@ for p = 1:NumPerm
     autocorr_perm(p,:) = mean(foo2,1);
 end
 
-percentile05 = prctile(autocorr_perm,5,1);
-percentile95 = prctile(autocorr_perm,95,1);
+percentile05 = prctile(autocorr_perm,2.5,1);
+percentile95 = prctile(autocorr_perm,97.5,1);
 
 % % permutation test Col
 % NLLstat_Col = y_Col_real_NLL;
@@ -29,7 +29,7 @@ percentile95 = prctile(autocorr_perm,95,1);
 
 %% compute percentiles for display
 
-
+% keyboard
 xspan = 10:10:410;
 xf = 4;
 
@@ -39,11 +39,11 @@ plot(xspan(xf:end),autocorr_real(xf:end),'color','b','linewidth',2),hold on
 jbfill(xspan(xf:end),percentile95(xf:end),percentile05(xf:end),'b','w'), hold on
 plot(xspan(xf:end),zeros(numel(xspan(xf:end)),1),'color','k','linewidth',2,'linestyle','--')
 xlabel('Lag (ms)'), ylabel('Autocorrelation')
-ylim([-0.05 0.3]),xlim([30 300])
+ylim([-0.1 0.3]),xlim([30 400])
 set(gca,'fontsize',16)
 legend('a','b'), legend boxoff
 
-keyboard
+% keyboard
 
 
 

@@ -49,19 +49,20 @@ for s = 1:length(par.subs)
     clear game j
     
     % Discard last trial otherwise index gets bigger than vector length
-    trials_Col(end) = false;
-    trials_Cau(end) = false;
+%     trials_Col(end) = false;
+%     trials_Cau(end) = false;
     
     % Extract reaction times from subsequent trial
-    rtAfterCol = BehMat(1+find(trials_Col),7);
-    rtAfterCau = BehMat(1+find(trials_Cau),7);
-    rtAfterCol(rtAfterCol == 0) = [];
-    rtAfterCau(rtAfterCau == 0) = [];
+%     rtAfterCol = BehMat(1+find(trials_Col),7);
+%     rtAfterCau = BehMat(1+find(trials_Cau),7);
+%     rtAfterCol(rtAfterCol == 0) = [];
+%     rtAfterCau(rtAfterCau == 0) = [];
 
     % Only retain GO trials and average RT
-    rtAfterCol_SSavg(s) = mean(rtAfterCol);
-    rtAfterCau_SSavg(s) = mean(rtAfterCau);
+%     rtAfterCol_SSavg(s) = mean(rtAfterCol);
+%     rtAfterCau_SSavg(s) = mean(rtAfterCau);
       
+      numOutcomes(s,:) = [sum(trials_Col), sum(trials_Cau)];
     
 end
 
