@@ -1,12 +1,23 @@
 subs = [1:5 7:9 11:25]; % Subjects
 
-job{1}.spm.stats.factorial_design.dir = {'/Users/gcastegnetti/Desktop/stds/MEGAA/analysis'};
+folder = '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/bf/pow_1-50_600ms';
 
-folder = '/Users/gcastegnetti/Desktop/stds/MEGAA/analysis/MEG_data/bf/pow_1-50_210-410ms';
-
+%% Smooth first
 for s = 1:numel(subs)
+    disp(['Smoothing sub#',num2str(subs(s))])
     fileCol = [folder,'_P/uv_pow_cond_Col_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
     fileCau = [folder,'_N/uv_pow_cond_Cau_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
+    sfileCol = [folder,'_P/suv_pow_cond_Col_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
+    sfileCau = [folder,'_N/suv_pow_cond_Cau_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
+    spm_smooth(fileCol,sfileCol,[10 10 10]);
+    spm_smooth(fileCau,sfileCau,[10 10 10]);
+end
+
+job{1}.spm.stats.factorial_design.dir = {'/Users/gcastegnetti/Desktop/stds/MEGAA/analysis'};
+
+for s = 1:numel(subs)
+    fileCol = [folder,'_P/suv_pow_cond_Col_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
+    fileCau = [folder,'_N/suv_pow_cond_Cau_ceOut_dnhpspmmeg_sub_',num2str(subs(s)),'_run_2.nii,1'];
     job{1}.spm.stats.factorial_design.des.pt.pair(s).scans = {fileCol; fileCau};
 end
 

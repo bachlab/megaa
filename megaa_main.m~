@@ -44,7 +44,7 @@ steps.corrEye = 0;
 steps.cutEpoch = 0;
 steps.findChan = 0;
 steps.findBin = 1;
-steps.findLasso = 1;
+steps.findLasso = 0;
 steps.createClass = 0;
 steps.classify = 0;
 steps.autocorr = 0;
@@ -120,9 +120,9 @@ end
 file_1 = fullfile(OutFolder,'Out_S1_OptBin'); % <----------------------------------------------------------I changed this
 if steps.findBin
     if ~exist('Out_0','var'), load(file_0,'Out_0'), end
-    Out_1 = megaa_cvPerformance(par,folders,Out_0);
-%     Out_1_cpv = megaa_crossParamValidation(par,folders,Out_0);
-%     save(file_1,'Out_1','-v7.3')
+%     Out_1 = megaa_cvPerformance(par,folders,Out_0);
+    Out_1_cpv = megaa_crossParamValidation(par,folders,Out_0);
+    save(file_1,'Out_1','-v7.3')
 end, clear Out_0
 
 
