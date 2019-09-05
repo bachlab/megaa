@@ -37,7 +37,7 @@ for s = 1:length(subs)
     nBins_class = size(d_Class,2);
     clear fileDelib dDelib foo r
     
-    
+    keyboard
     %% Classify MEG activity during deliberation
     % ----------------------------------------------------
     for trl = 1:n_trials

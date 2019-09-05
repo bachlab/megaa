@@ -3,7 +3,7 @@ function balAcc = megaa_balancedAccuracy(set_par,In)
 n_bins = set_par.NumTrainBins;
 
 for s = 1:length(set_par.subs)
-    for t = 1:n_bins
+    for t = 1:3
         %% Cau
         % find true positives
         foo_TP_Cau = find(In{s}.Pred_Cau(:,t) == 1 & [In{s}.Design(:,2); zeros(set_par.NumNullEx,1)] == 1);
@@ -46,8 +46,7 @@ for s = 1:length(set_par.subs)
         Acc_Pos_Col = TP_Col/(TP_Col + FN_Col);
         Acc_Neg_Col = TN_Col/(TN_Col + FP_Col);
 
-        balAcc.Col(s,t) = mean([Acc_Pos_Col Acc_Neg_Col]);
-        
+        balAcc.Col(s,t) = mean([Acc_Pos_Col Acc_Neg_Col]);        
 
         
     end

@@ -189,8 +189,8 @@ for s = 1:length(par.subs)
     cau.FitInfo = {};
     col.FitInfo = {};
     bas.FitInfo = {};
-    pred_Cau = nan(length(y_Cau),6);
-    pred_Col = nan(length(y_Cau),6);
+    pred_Cau = nan(length(y_Cau),3);
+    pred_Col = nan(length(y_Cau),3);
     
     % Loop over post-outcome time points
     for t = 30:30
@@ -198,9 +198,9 @@ for s = 1:length(par.subs)
         x_Base = d_Nul;                            % sensor data at the baseline
         x = [x_Real; x_Base];        
         
-        for o = 0:5
+        for o = 1:3
             
-            testSet = tmRed == o;            
+            testSet = tpRed == o;            
             trainingSet = ~testSet;
             
             % update user
@@ -218,11 +218,11 @@ for s = 1:length(par.subs)
             
             % Cau predictions
             foo_Cau = sum(repmat(foo_Coeff_Cau,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Cau.Intercept;
-            pred_Cau(testSet,o+1) = round(1./(1+exp(-foo_Cau)));
+            pred_Cau(testSet,o) = round(1./(1+exp(-foo_Cau)));
             
             % Col predictions
             foo_Col = sum(repmat(foo_Coeff_Col,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Col.Intercept;
-            pred_Col(testSet,o+1) = round(1./(1+exp(-foo_Col)));
+            pred_Col(testSet,o) = round(1./(1+exp(-foo_Col)));
             
         end
     end

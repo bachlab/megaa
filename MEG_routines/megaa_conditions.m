@@ -31,6 +31,9 @@ for s = 1:length(subs)
     end
     lmeMat(n_trials*(s-1)+1:n_trials*s,8) = behMat(:,7);
     
+    figure, plot(behMat(:,7)), hold on
+    stem(1000*behMat(:,9),'r'), ylim([100 3000])
+    [r,p] = corrcoef(behMat(:,7),behMat(:,9))
     
     % extract threat levels and potential losses
     % --------------------------------------------------------

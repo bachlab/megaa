@@ -14,7 +14,7 @@ fs = filesep;
 addpath('/Users/gcastegnetti/Desktop/tools/matlab/spm12')
 addpath(genpath([pwd,fs,'MEG_routines']))
 
-% spm eeg
+spm eeg
 
 %% Analysis parameters
 % -------------------------------------------------------------
@@ -120,8 +120,8 @@ end
 file_1 = fullfile(OutFolder,'Out_S1_OptBin'); % <----------------------------------------------------------I changed this
 if steps.findBin
     if ~exist('Out_0','var'), load(file_0,'Out_0'), end
-    Out_1 = megaa_cvPerformance(par,folders,Out_0);
-%     Out_1_cpv = megaa_crossParamValidation(par,folders,Out_0);
+%     Out_1 = megaa_cvPerformance(par,folders,Out_0);
+    Out_1_cpv = megaa_crossParamValidation(par,folders,Out_0);
 %     save(file_1,'Out_1','-v7.3')
 end, clear Out_0
 
@@ -131,7 +131,7 @@ end, clear Out_0
 file_2 = fullfile(OutFolder,'Out_S2_OptLas');
 if steps.findLasso
     if ~exist('Out_1','var'), load(file_1,'Out_1'), end
-    Out_2 = megaa_optimiseLambda(par,Out_1);
+    Out_2 = megaa_optimiseLambda(par,Out_1_cpv);
     save(file_2,'Out_2')
 end
 
@@ -198,7 +198,7 @@ megaa_fourierTransf(par,Out_4,conds)
 
 %% Behaviour <------- make this code nicer
 % -------------------------------------------------------------
-% megaa_behaviour(par,folders);
+megaa_behaviour(par,folders);
 
 
 %% Autocorrelation

@@ -22,7 +22,7 @@ function [fillhandle,msg]=jbfill(xpoints,upper,lower,color,edge,add,transparency
 %     [ph,msg]=jbfill(x,a,b,rand(1,3),rand(1,3),0,rand(1,1))
 %     grid on
 %     legend('Datr')
-if nargin<7;transparency=0.1;end %default is to have a transparency of .5
+if nargin<7;transparency=1;end %default is to have a transparency of .5
 if nargin<6;add=1;end     %default is to add to current plot
 if nargin<5;edge='w';end  %dfault edge color is white
 if nargin<4;color='b';end %default color is blue
@@ -34,8 +34,8 @@ if length(upper)==length(lower) && length(lower)==length(xpoints)
     if add
         hold on
     end
-    fillhandle=fill(xpoints,filled,color);%plot the data
-    set(fillhandle,'EdgeColor',edge,'FaceAlpha',transparency,'EdgeAlpha',transparency);%set edge color
+    fillhandle=fill(xpoints,filled,[0,200,255]/255);%plot the data
+    set(fillhandle,'EdgeColor','none','FaceAlpha',transparency,'EdgeAlpha',transparency);%set edge color
     if add
         hold off
     end

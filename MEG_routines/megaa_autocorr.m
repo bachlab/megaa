@@ -24,7 +24,7 @@ for s = 1:length(subs)
     % compute autocorrelation for every trial with real labels
     autocorr_trial_real = nan(numTrials,lagMaxIdx+1);
     for trl = 1:numTrials
-        autocorr_trial_real(trl,:) = autocorr(In_5.PredCont{s}.Cau(trl,1:minDur_idx),lagMaxIdx);
+        autocorr_trial_real(trl,:) = autocorr(In_5.PredCont{s}.Col(trl,1:minDur_idx),lagMaxIdx);
     end
     
 %     figure,plot(mean(autocorr_trial_real,1))
@@ -42,7 +42,7 @@ for s = 1:length(subs)
     for p = 1:numPerm
         autocorr_trial_perm = NaN(numTrials,lagMaxIdx+1);
         for trl = 1:numTrials
-            autocorr_trial_perm(trl,:) = autocorr(In_5.PredCont_perm{s,p}.Cau(trl,1:minDur_idx),lagMaxIdx);
+            autocorr_trial_perm(trl,:) = autocorr(In_5.PredCont_perm{s,p}.Col(trl,1:minDur_idx),lagMaxIdx);
         end
         
         if par.whichTpTrain < 100
@@ -188,6 +188,6 @@ errorbar(1,mean(numTransitionsReal_avg),semReal,'linestyle','none','color','k','
 set(gca,'fontsize',18,'xtick',1:2,'xticklabels',{'Correct','Permuted'}),...
     xlim([0 3]),ylim([0 60])
 ylabel('Transitions per trial')
-keyboard
+
 
 

@@ -154,89 +154,91 @@ for s = 1:length(par.subs)
     idx_All = [[idx_Col;idx_Cau] [zeros(length(idx_Col),1);ones(length(idx_Cau),1)]];
     [foo idx] = sort(idx_All);
     design = [foo(:,1),foo(idx(:,1),2)]; % this is the matrix used to build the inputs for lassglm
-    clear idx_Col idx_Cau idx_All foo idx trials_Col trials_Cau
+    clear idx_Col idx_Cau idx_All foo idx trials_Col 
     
+    aaa = cumsum(trials_Cau);
+    figure,plot(aaa)
     %% Create matrix with null examples
     % -------------------------------------------------------------
-    idx = (2:n_trials)';
-    TrlRem = idx(iti(1:end-1) > 2000);
-    TrlRem = TrlRem(randperm(length(TrlRem)));
-    TrlRem = TrlRem(1:num_NullEx);
-    OnsRem = round(1 + 99*rand(num_NullEx,1));
-    foo_Base = NaN(num_NullEx,size(d_Nul,1));
-    for b = 1:num_NullEx
-        foo_Base(b,:) = squeeze(d_Nul(:,OnsRem(b),TrlRem(b))); % sensor data at the baseline
-    end
-    d_Nul = foo_Base;
-    out{s}.d_Base = d_Nul; % save d_Base
-    clear idx trl_rem
-    
-    %% Train classifier
-    % -------------------------------------------------------------
-    
-    % Class labels
-    y_Cau = [design(:,2); zeros(num_NullEx,1)]; % outcomes if Cau are positive examples
-    y_Col = [1-design(:,2); zeros(num_NullEx,1)]; % outcomes if Col are positive examples
-    y_Bas = [0*design(:,2); ones(num_NullEx,1)]; % outcomes if Bas are positive examples
-    
-    % Allocate memory
-    cau.Coeff = {};
-    col.Coeff = {};
-    bas.Coeff = {};
-    cau.FitInfo = {};
-    col.FitInfo = {};
-    bas.FitInfo = {};
-    pred_Cau = nan(length(y_Cau),n_bins);
-    pred_Col = nan(length(y_Cau),n_bins);
-    
-    % Loop over post-outcome time points
-    for t = 1:n_bins
-        x_Real = squeeze(d_Real(:,t,design(:,1)))'; % sensor data at the outcome
-        x_Base = d_Nul;                            % sensor data at the baseline
-        x = [x_Real; x_Base];
-        
-        foo = cvpartition(y_Col,'kfold',10);
-        
-        
-        for o = 1:kfold
-            
-            trainingSet = training(foo,o);
-            testSet = ~trainingSet;
-            
-            % update user
-            disp(['Sub#',int2str(par.subs(s)),' of ',int2str(par.subs(end)),'; bin#',int2str(t) ' of ' int2str(n_bins),'; fold#',int2str(o),'; size = ',int2str(length(testSet)),'...']);
-            
-            x_test = x(testSet,:)';     % test set
-            x_train = x;                % training set
-            x_train(testSet,:) = [];    % remove test trials from training set
-            
-            y_Cau_red = y_Cau; y_Cau_red(testSet) = []; % Cau outcomes
-            y_Col_red = y_Col; y_Col_red(testSet) = []; % Col outcomes
-            
-            [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Cau positive examples
-            [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Col positive examples
-            
-            % Cau predictions
-            foo_Cau = sum(repmat(foo_Coeff_Cau,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Cau.Intercept;
-            pred_Cau(testSet,t) = round(1./(1+exp(-foo_Cau)));
-            
-            % Col predictions
-            foo_Col = sum(repmat(foo_Coeff_Col,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Col.Intercept;
-            pred_Col(testSet,t) = round(1./(1+exp(-foo_Col)));
-            
-        end
-    end
-    clear t t_Null RandOnsets_Null X_Real X_Base X Y_Cau Y_Col Cau Col
-    
-    out{s}.Pred_Cau = pred_Cau;
-    out{s}.Pred_Col = pred_Col;
-    out{s}.Chan = channels(:,s);
-    out{s}.Design = design;
-    out{s}.BasTrl = TrlRem;
-    out{s}.BasOns = OnsRem;
-    out{s}.d_Real = d_Real;
-    
-    clear d_Real d_Base Design
+%     idx = (2:n_trials)';
+%     TrlRem = idx(iti(1:end-1) > 2000);
+%     TrlRem = TrlRem(randperm(length(TrlRem)));
+%     TrlRem = TrlRem(1:num_NullEx);
+%     OnsRem = round(1 + 99*rand(num_NullEx,1));
+%     foo_Base = NaN(num_NullEx,size(d_Nul,1));
+%     for b = 1:num_NullEx
+%         foo_Base(b,:) = squeeze(d_Nul(:,OnsRem(b),TrlRem(b))); % sensor data at the baseline
+%     end
+%     d_Nul = foo_Base;
+%     out{s}.d_Base = d_Nul; % save d_Base
+%     clear idx trl_rem
+%     
+%     %% Train classifier
+%     % -------------------------------------------------------------
+%     
+%     % Class labels
+%     y_Cau = [design(:,2); zeros(num_NullEx,1)]; % outcomes if Cau are positive examples
+%     y_Col = [1-design(:,2); zeros(num_NullEx,1)]; % outcomes if Col are positive examples
+%     y_Bas = [0*design(:,2); ones(num_NullEx,1)]; % outcomes if Bas are positive examples
+%     
+%     % Allocate memory
+%     cau.Coeff = {};
+%     col.Coeff = {};
+%     bas.Coeff = {};
+%     cau.FitInfo = {};
+%     col.FitInfo = {};
+%     bas.FitInfo = {};
+%     pred_Cau = nan(length(y_Cau),n_bins);
+%     pred_Col = nan(length(y_Cau),n_bins);
+%     
+%     % Loop over post-outcome time points
+%     for t = 1:n_bins
+%         x_Real = squeeze(d_Real(:,t,design(:,1)))'; % sensor data at the outcome
+%         x_Base = d_Nul;                            % sensor data at the baseline
+%         x = [x_Real; x_Base];
+%         
+%         foo = cvpartition(y_Col,'kfold',10);
+%         
+%         
+%         for o = 1:kfold
+%             
+%             trainingSet = training(foo,o);
+%             testSet = ~trainingSet;
+%             
+%             % update user
+%             disp(['Sub#',int2str(par.subs(s)),' of ',int2str(par.subs(end)),'; bin#',int2str(t) ' of ' int2str(n_bins),'; fold#',int2str(o),'; size = ',int2str(length(testSet)),'...']);
+%             
+%             x_test = x(testSet,:)';     % test set
+%             x_train = x;                % training set
+%             x_train(testSet,:) = [];    % remove test trials from training set
+%             
+%             y_Cau_red = y_Cau; y_Cau_red(testSet) = []; % Cau outcomes
+%             y_Col_red = y_Col; y_Col_red(testSet) = []; % Col outcomes
+%             
+%             [foo_Coeff_Cau,foo_FitInfo_Cau] = lassoglm(x_train,y_Cau_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Cau positive examples
+%             [foo_Coeff_Col,foo_FitInfo_Col] = lassoglm(x_train,y_Col_red,'binomial','Alpha',1,'Lambda',0.025); % regression with Col positive examples
+%             
+%             % Cau predictions
+%             foo_Cau = sum(repmat(foo_Coeff_Cau,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Cau.Intercept;
+%             pred_Cau(testSet,t) = round(1./(1+exp(-foo_Cau)));
+%             
+%             % Col predictions
+%             foo_Col = sum(repmat(foo_Coeff_Col,1,size(x_test,2)).*x_test,1) + foo_FitInfo_Col.Intercept;
+%             pred_Col(testSet,t) = round(1./(1+exp(-foo_Col)));
+%             
+%         end
+%     end
+%     clear t t_Null RandOnsets_Null X_Real X_Base X Y_Cau Y_Col Cau Col
+%     
+%     out{s}.Pred_Cau = pred_Cau;
+%     out{s}.Pred_Col = pred_Col;
+%     out{s}.Chan = channels(:,s);
+%     out{s}.Design = design;
+%     out{s}.BasTrl = TrlRem;
+%     out{s}.BasOns = OnsRem;
+%     out{s}.d_Real = d_Real;
+%     
+%     clear d_Real d_Base Design
     
 end
 

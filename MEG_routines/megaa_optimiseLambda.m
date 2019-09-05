@@ -19,6 +19,8 @@ for s = 1:length(subs)
     plot(xspan,balancedAcc.Cau(s,:),'linewidth',1.5,'color','r'),hold on
     plot(xspan,balancedAcc.Col(s,:),'linewidth',1.5,'color','b')
     ylim([0.45 0.85])
+    
+    aaa(s) = max(balancedAcc.Col(s,:));
 end
 
 %% Compute accuracy mean and SEM
@@ -114,5 +116,4 @@ out.OptDevia_Cau = dev_Cau;
 out.OptDevia_Col = dev_Col;
 out.Lambdas = lasso;
 out.OptBin = optBin;
-keyboard
 
